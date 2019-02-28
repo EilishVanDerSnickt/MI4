@@ -30,7 +30,8 @@
             android:textSize="16dp"
             android:textColor="#6E6E6E"
             app:layout_constraintTop_toBottomOf="@id/text_wachtwoordTitel"
-            android:layout_marginTop="32dp"/>
+            android:layout_marginTop="32dp"
+            android:layout_marginLeft="5dp"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -38,7 +39,8 @@
             android:inputType="textEmailAddress"
             android:ems="10"
             android:id="@+id/edit_wachtwoordVergeten_emailadres"
-            app:layout_constraintTop_toBottomOf="@id/text_wachtwoordVergeten_emailadres"/>
+            app:layout_constraintTop_toBottomOf="@id/text_wachtwoordVergeten_emailadres"
+            android:layout_marginLeft="5dp"/>
 
         <Button
             android:text="Ga verder"

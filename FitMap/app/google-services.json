@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "114761484500",
+    "firebase_url": "https://fitmap-bfa0b.firebaseio.com",
+    "project_id": "fitmap-bfa0b",
+    "storage_bucket": "fitmap-bfa0b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:114761484500:android:073d182c5ee69283",
+        "android_client_info": {
+          "package_name": "com.example.eilishvds.fitmap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "114761484500-gtnohn2ibbh60d8c9olr36p8ruebqjt4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.eilishvds.fitmap",
+            "certificate_hash": "66b6814831851fca8c5b0e5653d96386ceffd022"
+          }
+        },
+        {
+          "client_id": "114761484500-apkrn7ujj3rqvq07bupfksain32vm7n1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwR-gXigYPzuUE2oWnv6LgBiIYOy7b_nA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "114761484500-apkrn7ujj3rqvq07bupfksain32vm7n1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,10 +3,29 @@ package com.example.eilishvds.fitmap;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.navigation.Navigation;
+
+import android.widget.EditText;
+import android.widget.Toast;
+import android.util.Log;
+import android.nfc.Tag;
+import android.support.v7.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.Executor;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -28,6 +47,9 @@ public class registrerenFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private FirebaseAuth mAuth;
+    //private MainActivity main = new MainActivity();
 
     public registrerenFragment() {
         // Required empty public constructor
@@ -58,6 +80,8 @@ public class registrerenFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -105,4 +129,11 @@ public class registrerenFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    public void AnnuleerRegistratie(View v){
+        Navigation.findNavController(v).navigate(R.id.action_registreren_to_login);
+    }
+
+
+
 }

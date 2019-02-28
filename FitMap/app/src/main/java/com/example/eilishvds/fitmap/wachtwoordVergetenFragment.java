@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.navigation.Navigation;
 
 
 /**
@@ -104,5 +107,13 @@ public class wachtwoordVergetenFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void WachtwoordVergeten(String emailadres, View v){
+        Navigation.findNavController(v).navigate(R.id.action_wachtwoordVergeten_to_login);
+    }
+
+    public void AnnuleerWachtwoordVergeten(View v){
+        Navigation.findNavController(v).navigate(R.id.action_wachtwoordVergeten_to_login);
     }
 }

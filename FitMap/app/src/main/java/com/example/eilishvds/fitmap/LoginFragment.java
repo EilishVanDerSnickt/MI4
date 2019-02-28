@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import androidx.navigation.Navigation;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +35,8 @@ public class LoginFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private FirebaseAuth mAuth;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -60,6 +67,8 @@ public class LoginFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void addListenerOnButton() {
@@ -111,5 +120,18 @@ public class LoginFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void RegistreerNu(View v){
+        Navigation.findNavController(v).navigate(R.id.action_login_to_registreren);
+    }
+
+    public void WachtwoordVergeten(View v){
+        Navigation.findNavController(v).navigate(R.id.action_login_to_wachtwoordVergeten);
+    }
+
+    public void Inloggen(View v, String emailadres, String wachtwoord){
+
+        Navigation.findNavController(v).navigate(R.id.action_login_to_home);
     }
 }

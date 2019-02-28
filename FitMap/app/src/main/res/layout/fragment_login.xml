@@ -37,7 +37,7 @@
             android:layout_height="42dp"
             android:inputType="textEmailAddress"
             android:ems="10"
-            android:id="@+id/login_emailadres"
+            android:id="@+id/edit_login_emailadres"
             app:layout_constraintTop_toBottomOf="@id/text_emailadres"/>
 
         <TextView
@@ -47,7 +47,7 @@
             android:id="@+id/text_wachtwoord"
             android:textSize="16dp"
             android:textColor="#6E6E6E"
-            app:layout_constraintTop_toBottomOf="@id/login_emailadres"
+            app:layout_constraintTop_toBottomOf="@id/edit_login_emailadres"
             android:layout_marginTop="32dp"/>
 
         <EditText
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/login_wachtwoord"
+            android:id="@+id/edit_login_wachtwoord"
             app:layout_constraintTop_toBottomOf="@id/text_wachtwoord"/>
 
         <TextView
@@ -64,7 +64,7 @@
             android:text="Wachtwoord vergeten?"
             android:textColor="#0174DF"
             android:id="@+id/text_wachtwoordVergeten"
-            app:layout_constraintTop_toBottomOf="@+id/login_wachtwoord"
+            app:layout_constraintTop_toBottomOf="@+id/edit_login_wachtwoord"
             android:textSize="10dp"
             android:onClick="wachtwoord"/>
         <Button
