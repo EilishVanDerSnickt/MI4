@@ -6,9 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".homeFragment">
 
-    <android.support.constraint.ConstraintLayout
+<android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
 
         <android.support.v7.widget.SearchView
             android:layout_width="match_parent"
@@ -17,47 +18,51 @@
 
         </android.support.v7.widget.SearchView>
         <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:layout_constraintTop_toBottomOf="@id/search_view"
-            android:id="@+id/scroll_view">
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toBottomOf="@id/search_view"
+        android:id="@+id/scroll_view">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:id="@+id/card_1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Eilish Van Der Snickt"/>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:id="@+id/card_2"
+                    app:layout_constraintTop_toBottomOf="@id/card_1"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Eilish Van Der Snickt"/>
+
+                </android.support.v7.widget.CardView>
+
             </android.support.constraint.ConstraintLayout>
         </ScrollView>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Activiteit"
+        android:onClick="StartActiviteit"
+        app:layout_constraintTop_toBottomOf="@id/scroll_view"/>
 
-
-        <android.support.design.widget.TabLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id="@+id/tab_layout"
-            app:layout_constraintTop_toBottomOf="@id/scroll_view">
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/tabItem1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tab1" />
-            <android.support.design.widget.TabItem
-                android:id="@+id/tabItem2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tab2" />
-
-        </android.support.design.widget.TabLayout>
-
-        <Button
-            android:id="@+id/btnStart_activiteit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start nieuwe activiteit"
-            android:onClick="startActiviteit"
-            android:layout_marginBottom="10dp"/>
-
-    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

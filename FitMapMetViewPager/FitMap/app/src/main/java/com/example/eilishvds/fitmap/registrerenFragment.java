@@ -3,21 +3,40 @@ package com.example.eilishvds.fitmap;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.navigation.Navigation;
+
+import android.widget.EditText;
+import android.widget.Toast;
+import android.util.Log;
+import android.nfc.Tag;
+import android.support.v7.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.Executor;
+
+import static android.content.ContentValues.TAG;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link homeFragment.OnFragmentInteractionListener} interface
+ * {@link registrerenFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link homeFragment#newInstance} factory method to
+ * Use the {@link registrerenFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class homeFragment extends Fragment {
+public class registrerenFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,7 +48,10 @@ public class homeFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public homeFragment() {
+    private FirebaseAuth mAuth;
+    //private MainActivity main = new MainActivity();
+
+    public registrerenFragment() {
         // Required empty public constructor
     }
 
@@ -39,11 +61,11 @@ public class homeFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment homeFragment.
+     * @return A new instance of fragment registrerenFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static homeFragment newInstance(String param1, String param2) {
-        homeFragment fragment = new homeFragment();
+    public static registrerenFragment newInstance(String param1, String param2) {
+        registrerenFragment fragment = new registrerenFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -58,13 +80,15 @@ public class homeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return inflater.inflate(R.layout.fragment_registreren, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -106,7 +130,10 @@ public class homeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void StartActiviteit(View v){
-
+    public void AnnuleerRegistratie(View v){
+        Navigation.findNavController(v).navigate(R.id.action_registreren_to_login);
     }
+
+
+
 }

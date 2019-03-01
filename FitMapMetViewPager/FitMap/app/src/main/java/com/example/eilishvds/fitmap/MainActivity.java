@@ -8,9 +8,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -24,8 +21,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executor;
 
 import androidx.navigation.Navigation;
@@ -49,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     private FirebaseAuth mAuth;
 
+    private TabLayout tablayout;
+    private ViewPager viewpager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +55,21 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         mAuth = FirebaseAuth.getInstance();
+
+        viewpager = (ViewPager)findViewById(R.id.view_pager);
+        setupViewPager(viewpager);
+
+        tablayout = (TabLayout)findViewById(R.id.tab_layout);
+        tablayout.setupWithViewPager(viewpager);
+    }
+
+    private void setupViewPager(ViewPager viewpager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new viewPager_tab1());
+        adapter.addFragment(new viewPager_tab2());
+        adapter.addFragment(new viewPager_tab3());
+        viewpager.setAdapter(adapter);
+
     }
 
     @Override
@@ -232,10 +245,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         }
 
         return  valid;
-    }
-
-    public void StartActiviteit(View v) {
-       home.StartActiviteit(v);
     }
 }
 

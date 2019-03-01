@@ -1,5 +1,7 @@
 package com.example.eilishvds.fitmap;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.net.Uri;
 import android.nfc.Tag;
@@ -17,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.eilishvds.fitmap.CardAdapter.MyViewHolder;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     private FirebaseAuth mAuth;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         mAuth = FirebaseAuth.getInstance();
+
+
+
+
     }
 
     @Override
@@ -234,9 +243,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         return  valid;
     }
 
-    public void StartActiviteit(View v) {
-       home.StartActiviteit(v);
-    }
+
 }
 
 

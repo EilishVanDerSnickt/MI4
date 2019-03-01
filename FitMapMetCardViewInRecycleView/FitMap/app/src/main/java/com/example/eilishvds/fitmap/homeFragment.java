@@ -4,9 +4,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -28,6 +34,10 @@ public class homeFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private RecyclerView recyclerView;
+    private CardAdapter adapter;
+    private List<Prestatie> prestatielijst;
 
     public homeFragment() {
         // Required empty public constructor
@@ -58,13 +68,31 @@ public class homeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+
+
+
+        recyclerView = (RecyclerView)rootView.findViewById(R.id.recycler_view);
+
+        prestatielijst = new ArrayList<>();
+        adapter = new CardAdapter(getActivity(), prestatielijst);
+        prestatieVoorbereiding();
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+
+
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -106,7 +134,9 @@ public class homeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void StartActiviteit(View v){
+    private void prestatieVoorbereiding(){
 
+        Prestatie a = new Prestatie("Eilish Van Der Snickt", 19, 70);
+        prestatielijst.add(a);
     }
 }
