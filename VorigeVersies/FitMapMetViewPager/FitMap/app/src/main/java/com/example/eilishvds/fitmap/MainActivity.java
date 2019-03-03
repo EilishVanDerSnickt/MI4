@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     private FirebaseAuth mAuth;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
         mAuth = FirebaseAuth.getInstance();
     }
+
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -227,8 +231,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
         return  valid;
     }
-
-
 }
 
 

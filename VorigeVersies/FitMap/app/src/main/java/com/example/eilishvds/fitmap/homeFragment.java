@@ -3,9 +3,7 @@ package com.example.eilishvds.fitmap;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +28,6 @@ public class homeFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
-    private TabLayout tablayout;
-    private ViewPager viewpager;
 
     public homeFragment() {
         // Required empty public constructor
@@ -69,15 +64,7 @@ public class homeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootview = inflater.inflate(R.layout.fragment_home, container, false);
-
-        viewpager = (ViewPager)rootview.findViewById(R.id.view_pager);
-        setupViewPager(viewpager);
-
-        tablayout = (TabLayout)rootview.findViewById(R.id.tab_layout);
-        tablayout.setupWithViewPager(viewpager);
-
-        return rootview;
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -119,12 +106,7 @@ public class homeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private void setupViewPager(ViewPager viewpager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
-        adapter.addFragment(new viewPager_tab1());
-        adapter.addFragment(new viewPager_tab2());
-        adapter.addFragment(new viewPager_tab3());
-        viewpager.setAdapter(adapter);
+    public void StartActiviteit(View v){
 
     }
 }

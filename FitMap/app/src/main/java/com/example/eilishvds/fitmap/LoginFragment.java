@@ -4,16 +4,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.concurrent.Executor;
+
 import androidx.navigation.Navigation;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -33,6 +44,9 @@ public class LoginFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private EditText edittext1;
+    private EditText edittext2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -130,8 +144,10 @@ public class LoginFragment extends Fragment {
         Navigation.findNavController(v).navigate(R.id.action_login_to_wachtwoordVergeten);
     }
 
-    public void Inloggen(View v, String emailadres, String wachtwoord){
+    public void Inloggen(View v){
 
-        Navigation.findNavController(v).navigate(R.id.action_login_to_home);
     }
+
+
+
 }
