@@ -27,7 +27,7 @@ import androidx.navigation.Navigation;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener{
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private LoginFragment login = new LoginFragment();
     private registrerenFragment registreren = new registrerenFragment();
     private wachtwoordVergetenFragment wachtwoordVergeten = new wachtwoordVergetenFragment();
+    private settingsFragment instellingen = new settingsFragment();
+    private aanmakenActiviteit activiteit = new aanmakenActiviteit();
 
     private FirebaseAuth mAuth;
 
@@ -228,7 +230,13 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         return  valid;
     }
 
+    public void openInstellingen(View v){
+        home.instellingen(v);
+    }
 
+    public void startActiviteit(View v){
+        home.activiteit(v);
+    }
 }
 
 
