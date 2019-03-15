@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/popup_bg"
+    tools:context=".PopActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ben je zeker dat je dit account wilt verwijderen?"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        android:id="@+id/text_bevestiging_titel"
+        android:paddingTop="5dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dit kan niet ongedaan gemaakt worden!"
+        android:textSize="15dp"
+        android:id="@+id/text_bevestiging_warning"
+        app:layout_constraintTop_toBottomOf="@id/text_bevestiging_titel"
+        android:textAlignment="center"
+        android:paddingTop="20dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_annuleren"
+        android:textSize="15dp"
+        android:text="Annuleren"
+        app:layout_constraintTop_toBottomOf="@id/text_bevestiging_warning"
+        app:layout_constraintEnd_toStartOf="@id/btn_bevestigen"
+        android:onClick="annuleerBevestiging"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_bevestigen"
+        android:text="Toevoegen"
+        android:textSize="15dp"
+        app:layout_constraintEnd_toEndOf="@id/text_bevestiging_warning"
+        app:layout_constraintTop_toBottomOf="@id/text_bevestiging_warning"
+        android:backgroundTint="#DF013A"
+        android:textColor="#FFFFFF"
+        android:onClick="bevesting"
+        android:layout_marginTop="20dp"/>
+
+</android.support.constraint.ConstraintLayout>

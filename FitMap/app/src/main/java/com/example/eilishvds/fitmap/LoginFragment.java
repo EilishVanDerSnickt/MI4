@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,11 +83,18 @@ public class LoginFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+
+        getActivity().getWindow().setLayout((int) (width), (int)(height));
+
         mAuth = FirebaseAuth.getInstance();
     }
 
     private void addListenerOnButton() {
-
 
     }
 
@@ -142,10 +150,6 @@ public class LoginFragment extends Fragment {
 
     public void WachtwoordVergeten(View v){
         Navigation.findNavController(v).navigate(R.id.action_login_to_wachtwoordVergeten);
-    }
-
-    public void Inloggen(View v){
-
     }
 
 

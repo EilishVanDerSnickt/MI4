@@ -112,23 +112,9 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1224" />
-                            <option name="y" value="1359" />
+                            <option name="x" value="-1652" />
+                            <option name="y" value="-384" />
                           </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_popup_to_inloggen">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_popup_to_instellingen">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -171,11 +157,6 @@
                               </value>
                             </entry>
                             <entry key="action_instellingen_to_home">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_instellingen_to_popup">
                               <value>
                                 <LayoutPositions />
                               </value>

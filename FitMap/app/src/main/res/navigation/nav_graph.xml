@@ -44,12 +44,43 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.eilishvds.fitmap.settingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings"/>
+        tools:layout="@layout/fragment_settings">
+        <action android:id="@+id/action_instellingen_to_home" app:destination="@+id/homeFragment"/>
+        <action android:id="@+id/action_instellingen_to_wachtwoordWijzigen" app:destination="@+id/wachtwoordWijzigenFragment"/>
+        <action android:id="@+id/action_instellingen_to_emailWijzigen" app:destination="@+id/emailWijzigenFragment"/>
+        <action android:id="@+id/action_instellingen_to_popup" app:destination="@+id/popupFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/aanmakenActiviteit"
         android:name="com.example.eilishvds.fitmap.aanmakenActiviteit"
         android:label="fragment_aanmaken_activiteit"
-        tools:layout="@layout/fragment_aanmaken_activiteit" />
+        tools:layout="@layout/fragment_aanmaken_activiteit">
+        <action android:id="@+id/action_aanmakenActiviteit_to_home" app:destination="@+id/homeFragment"/>
+    </fragment>
 
+    <fragment
+        android:id="@+id/wachtwoordWijzigenFragment"
+        android:name="com.example.eilishvds.fitmap.wachtwoordWijzigenFragment"
+        android:label="fragment_wachtwoord_wijzigen"
+        tools:layout="@layout/fragment_wachtwoord_wijzigen">
+        <action android:id="@+id/action_wachtwoordWijzigen_to_instellingen" app:destination="@+id/settingsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/emailWijzigenFragment"
+        android:name="com.example.eilishvds.fitmap.emailWijzigenFragment"
+        android:label="fragment_email_wijzigen"
+        tools:layout="@layout/fragment_email_wijzigen">
+        <action android:id="@+id/action_emailWijzigen_to_instellingen" app:destination="@+id/settingsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/popupFragment"
+        android:name="com.example.eilishvds.fitmap.popupFragment"
+        android:label="fragment_popup"
+        tools:layout="@layout/fragment_popup">
+        <action android:id="@+id/action_popup_to_instellingen" app:destination="@+id/settingsFragment"/>
+        <action android:id="@+id/action_popup_to_inloggen" app:destination="@+id/loginFragment"/>
+    </fragment>
 </navigation>

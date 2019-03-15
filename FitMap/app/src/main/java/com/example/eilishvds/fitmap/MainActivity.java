@@ -1,6 +1,7 @@
 package com.example.eilishvds.fitmap;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -27,7 +29,7 @@ import androidx.navigation.Navigation;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener, popupFragment.OnFragmentInteractionListener{
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -43,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private wachtwoordVergetenFragment wachtwoordVergeten = new wachtwoordVergetenFragment();
     private settingsFragment instellingen = new settingsFragment();
     private aanmakenActiviteit activiteit = new aanmakenActiviteit();
+    private emailWijzigenFragment emailWijzigen = new emailWijzigenFragment();
+    private wachtwoordWijzigenFragment wachtwoordWijzigen = new wachtwoordWijzigenFragment();
+    private popupFragment popup = new popupFragment();
 
     private FirebaseAuth mAuth;
 
@@ -236,6 +241,103 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     public void startActiviteit(View v){
         home.activiteit(v);
+    }
+
+    public void annuleerActiviteit(View v){
+        activiteit.home(v);
+    }
+
+    public void WachtwoordWijzigen(View v){
+        instellingen.wachtwoordWijzigen(v);
+    }
+
+    public void EmailWijzigen(View v){
+        instellingen.emailWijzigen(v);
+    }
+
+    public void AccountVerwijderen(View v){
+        instellingen.accountVerwijderen(v);
+    }
+
+    public void annuleerInstellingen(View v){
+        instellingen.AnnuleerInstellingen(v);
+    }
+
+    public void annuleerWijzigWachtwoord(View v){
+        wachtwoordWijzigen.AnnuleerWachtwoordWijzigen(v);
+    }
+
+    public void annuleerWijzigEmail(View v){
+        emailWijzigen.AnnuleerEmailWijzigen(v);
+    }
+
+    public void annuleerBevestiging(View v){
+        popup.naarInstellingen(v);
+    }
+
+    public void bevesting(View v){
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        user.delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "Account " + user.getDisplayName() + " is succesvol verwijdert",
+                                    Toast.LENGTH_SHORT).show();
+                            Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_popup_to_inloggen);
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this, "Kan account niet verwijderen",
+                                    Toast.LENGTH_SHORT).show();
+                            Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_popup_to_instellingen);
+                        }
+                    }
+                });
+        // [END delete_user]
+
+    }
+
+    public void wachtwoordWijzigen(View v){
+        // [START update_password]
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        edittext1 = (EditText) findViewById(R.id.edit_wachtwoordWijzigen_emailadres);
+
+        final String email = edittext1.getText().toString();
+
+        if (!validateFormWachtwoordWijzigen(email, user)) {
+            return;
+        }
+
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent.");
+                            Toast.makeText(MainActivity.this, "Email sent to " + email,
+                                    Toast.LENGTH_SHORT).show();
+                            Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_wachtwoordVergeten_to_login);
+                        }else{
+                            Log.d(TAG, "Couldn't sent email");
+                            Toast.makeText(MainActivity.this, "Couldn't sent email",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private Boolean validateFormWachtwoordWijzigen(String email, FirebaseUser user){
+        boolean valid = true;
+
+        if (email != user.getEmail()) {
+            edittext1 = (EditText)findViewById(R.id.edit_login_emailadres);
+            edittext1.setError("This field is required");
+            valid = false;
+        }
+
+        return  valid;
     }
 }
 

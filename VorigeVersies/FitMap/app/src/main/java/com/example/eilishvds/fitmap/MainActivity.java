@@ -1,6 +1,7 @@
 package com.example.eilishvds.fitmap;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.support.annotation.NonNull;
@@ -8,9 +9,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -24,15 +22,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executor;
 
 import androidx.navigation.Navigation;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener{
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -46,6 +42,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private LoginFragment login = new LoginFragment();
     private registrerenFragment registreren = new registrerenFragment();
     private wachtwoordVergetenFragment wachtwoordVergeten = new wachtwoordVergetenFragment();
+    private settingsFragment instellingen = new settingsFragment();
+    private aanmakenActiviteit activiteit = new aanmakenActiviteit();
+    private emailWijzigenFragment emailWijzigen = new emailWijzigenFragment();
+    private wachtwoordWijzigenFragment wachtwoordWijzigen = new wachtwoordWijzigenFragment();
 
     private FirebaseAuth mAuth;
 
@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         }
                     }
                 });
-
     }
 
     public void registreerNu(View v) {
@@ -234,8 +233,41 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         return  valid;
     }
 
-    public void StartActiviteit(View v) {
-       home.StartActiviteit(v);
+    public void openInstellingen(View v){
+        home.instellingen(v);
+    }
+
+    public void startActiviteit(View v){
+        home.activiteit(v);
+    }
+
+    public void annuleerActiviteit(View v){
+        activiteit.home(v);
+    }
+
+    public void WachtwoordWijzigen(View v){
+        instellingen.wachtwoordWijzigen(v);
+    }
+
+    public void EmailWijzigen(View v){
+        instellingen.emailWijzigen(v);
+    }
+
+    public void AccountVerwijderen(View v){
+        Intent i = new Intent(getApplicationContext(), PopActivity.class);
+        startActivity(i);
+    }
+
+    public void annuleerInstellingen(View v){
+        instellingen.AnnuleerInstellingen(v);
+    }
+
+    public void annuleerWijzigWachtwoord(View v){
+        wachtwoordWijzigen.AnnuleerWachtwoordWijzigen(v);
+    }
+
+    public void annuleerWijzigEmail(View v){
+        emailWijzigen.AnnuleerEmailWijzigen(v);
     }
 }
 

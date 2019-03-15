@@ -4,9 +4,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.navigation.Navigation;
 
 
 /**
@@ -58,6 +61,14 @@ public class settingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+
+        getActivity().getWindow().setLayout((int) (width), (int)(height));
     }
 
     @Override
@@ -104,5 +115,21 @@ public class settingsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void wachtwoordWijzigen(View v){
+        Navigation.findNavController(v).navigate(R.id.action_instellingen_to_wachtwoordWijzigen);
+    }
+
+    public void emailWijzigen(View v){
+        Navigation.findNavController(v).navigate(R.id.action_instellingen_to_emailWijzigen);
+    }
+
+    public void AnnuleerInstellingen(View v){
+        Navigation.findNavController(v).navigate(R.id.action_instellingen_to_home);
+    }
+
+    public void accountVerwijderen(View v){
+        Navigation.findNavController(v).navigate(R.id.action_instellingen_to_popup);
     }
 }
