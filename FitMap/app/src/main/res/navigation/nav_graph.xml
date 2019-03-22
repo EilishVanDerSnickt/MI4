@@ -91,6 +91,16 @@
         android:name="com.example.eilishvds.fitmap.LocatieMapFragment"
         android:label="fragment_locatie_map"
         tools:layout="@layout/fragment_locatie_map">
+        <action android:id="@+id/action_locatieMap_to_annuleerActiviteit" app:destination="@+id/annuleerActiviteitFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/annuleerActiviteitFragment"
+        android:name="com.example.eilishvds.fitmap.annuleerActiviteitFragment"
+        android:label="fragment_annuleer_activiteit"
+        tools:layout="@layout/fragment_annuleer_activiteit">
+        <action android:id="@+id/action_annuleerActiviteit_to_locatieMap" app:destination="@+id/locatieMapFragment"/>
+        <action android:id="@+id/action_annuleerActiviteit_to_home" app:destination="@+id/homeFragment"/>
     </fragment>
 
 </navigation>

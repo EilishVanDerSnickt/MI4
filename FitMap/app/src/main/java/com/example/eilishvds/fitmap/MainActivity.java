@@ -30,7 +30,7 @@ import androidx.navigation.Navigation;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener, popupFragment.OnFragmentInteractionListener, LocatieMapFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener, popupFragment.OnFragmentInteractionListener, LocatieMapFragment.OnFragmentInteractionListener, annuleerActiviteitFragment.OnFragmentInteractionListener{
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private wachtwoordWijzigenFragment wachtwoordWijzigen = new wachtwoordWijzigenFragment();
     private popupFragment popup = new popupFragment();
     private LocatieMapFragment locatieMap = new LocatieMapFragment();
+    private annuleerActiviteitFragment annuleerActiviteit = new annuleerActiviteitFragment();
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -426,6 +427,21 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                     Toast.LENGTH_SHORT).show();
         }
         // [END auth_sign_out]
+    }
+
+    public void annuleerlocatieMap(View v){
+        locatieMap.annuleer(v);
+    }
+    public void bevestingAnnulatie(View v){
+        annuleerActiviteit.bevesting(v);
+    }
+
+    public void annuleerAnnulatie(View v){
+        annuleerActiviteit.annulleer(v);
+    }
+
+    public void activiteitLocatie(View v){
+        activiteit.activiteitLocatie(v);
     }
 }
 
