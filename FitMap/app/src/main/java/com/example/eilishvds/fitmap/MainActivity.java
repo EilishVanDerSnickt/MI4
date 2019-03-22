@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,7 +30,7 @@ import androidx.navigation.Navigation;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener, popupFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener, popupFragment.OnFragmentInteractionListener, LocatieMapFragment.OnFragmentInteractionListener{
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private EditText edittext4;
     private CheckBox checkbox;
     private boolean checked;
+    private TextView textview;
     private homeFragment home = new homeFragment();
     private LoginFragment login = new LoginFragment();
     private registrerenFragment registreren = new registrerenFragment();
@@ -48,8 +50,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private emailWijzigenFragment emailWijzigen = new emailWijzigenFragment();
     private wachtwoordWijzigenFragment wachtwoordWijzigen = new wachtwoordWijzigenFragment();
     private popupFragment popup = new popupFragment();
+    private LocatieMapFragment locatieMap = new LocatieMapFragment();
 
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,34 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+    }
+
+    public void wachtwoordWijzigen(View v) {
+        edittext1 = (EditText) findViewById(R.id.edit_wachtwoordWijzigen_emailadres);
+
+        String email = edittext1.getText().toString();
+
+        /**
+         if (!validateFormWachtwoordWijzigen(email)){
+         return;
+         }
+         */
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent.");
+                            Toast.makeText(MainActivity.this, "Email sent to " + mAuth.getCurrentUser().getEmail(),
+                                    Toast.LENGTH_SHORT).show();
+                            Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_wachtwoordWijzigen_to_instellingen);
+                        }else{
+                            Log.d(TAG, "Couldn't sent email");
+                            Toast.makeText(MainActivity.this, "Couldn't sent email",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     public void activityMain(View v) {
@@ -83,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            user = mAuth.getCurrentUser();
                             Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_login_to_home);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -135,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            user = mAuth.getCurrentUser();
                             /*updateUI(user);*/
                             Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_registreren_to_login);
                         } else {
@@ -162,15 +194,20 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     public void wachtwoordVergeten(View v) {
         edittext1 = (EditText) findViewById(R.id.edit_wachtwoordVergeten_emailadres);
 
-        final String email = edittext1.getText().toString();
+        String email = edittext1.getText().toString();
 
+        /**
+        if (!validateFormWachtwoordWijzigen(email)){
+            return;
+        }
+*/
         mAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Email sent.");
-                            Toast.makeText(MainActivity.this, "Email sent to " + email,
+                            Toast.makeText(MainActivity.this, "Email sent to " + mAuth.getCurrentUser().getEmail(),
                                     Toast.LENGTH_SHORT).show();
                             Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_wachtwoordVergeten_to_login);
                         }else{
@@ -276,14 +313,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
 
     public void bevesting(View v){
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         user.delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(MainActivity.this, "Account " + user.getDisplayName() + " is succesvol verwijdert",
+                            Toast.makeText(MainActivity.this, "Account " + mAuth.getCurrentUser().getEmail() + " is succesvol verwijdert",
                                     Toast.LENGTH_SHORT).show();
                             Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_popup_to_inloggen);
                         }
@@ -298,46 +335,97 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     }
 
-    public void wachtwoordWijzigen(View v){
-        // [START update_password]
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        edittext1 = (EditText) findViewById(R.id.edit_wachtwoordWijzigen_emailadres);
-
-        final String email = edittext1.getText().toString();
-
-        if (!validateFormWachtwoordWijzigen(email, user)) {
-            return;
-        }
-
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent.");
-                            Toast.makeText(MainActivity.this, "Email sent to " + email,
-                                    Toast.LENGTH_SHORT).show();
-                            Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_wachtwoordVergeten_to_login);
-                        }else{
-                            Log.d(TAG, "Couldn't sent email");
-                            Toast.makeText(MainActivity.this, "Couldn't sent email",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
-    private Boolean validateFormWachtwoordWijzigen(String email, FirebaseUser user){
+    private Boolean validateFormWachtwoordWijzigen(String email){
         boolean valid = true;
 
-        if (email != user.getEmail()) {
-            edittext1 = (EditText)findViewById(R.id.edit_login_emailadres);
+
+        if (email.isEmpty()) {
+            edittext1 = (EditText)findViewById(R.id.edit_wachtwoordWijzigen_emailadres);
             edittext1.setError("This field is required");
             valid = false;
         }
 
         return  valid;
+    }
+
+    public String getUserProfile() {
+        // [START get_user_profile]
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            Uri photoUrl = user.getPhotoUrl();
+
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getIdToken() instead.
+            String uid = user.getUid();
+
+           return email;
+        }
+
+        return "null";
+        // [END get_user_profile]
+    }
+
+    public void emailIsGewijzigd(View v){
+        // [START update_email]
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        textview = (TextView) findViewById(R.id.edit_emailWijzigen_huidigEmail);
+        edittext1 = (EditText) findViewById(R.id.edit_emailWijzigen_nieuwEmail);
+        String huidigeEmail = textview.getText().toString();
+        String nieuweEmail = edittext2.getText().toString();
+
+        if (!validateFormEmailWijzigen(huidigeEmail, nieuweEmail)) {
+            return;
+        }
+
+        user.updateEmail(nieuweEmail)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "Email adres is geupdate",
+                                    Toast.LENGTH_SHORT).show();
+                            Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_emailWijzigen_to_instellingen);
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this, "Kan emailadres niet updaten",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        // [END update_email]
+    }
+
+    private Boolean validateFormEmailWijzigen(String huidigeEmail, String nieuweEmail){
+        boolean valid = true;
+
+        if (nieuweEmail.isEmpty() || nieuweEmail == huidigeEmail) {
+            edittext1 = (EditText)findViewById(R.id.edit_emailWijzigen_nieuwEmail);
+            edittext1.setError("This field is required");
+            valid = false;
+        }
+
+        return  valid;
+    }
+
+    public void LogOff(View v){
+        // [START auth_sign_out]
+        FirebaseAuth.getInstance().signOut();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null){
+            Navigation.findNavController(v).navigate(R.id.action_instellingen_to_login);
+        }
+        else {
+            Toast.makeText(MainActivity.this, "Kan niet uitloggen",
+                    Toast.LENGTH_SHORT).show();
+        }
+        // [END auth_sign_out]
     }
 }
 

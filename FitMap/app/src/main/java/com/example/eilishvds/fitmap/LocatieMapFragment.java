@@ -1,30 +1,35 @@
 package com.example.eilishvds.fitmap;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-
-import androidx.navigation.Navigation;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link emailWijzigenFragment.OnFragmentInteractionListener} interface
+ * {@link LocatieMapFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link emailWijzigenFragment#newInstance} factory method to
+ * Use the {@link LocatieMapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class emailWijzigenFragment extends Fragment {
+public class LocatieMapFragment extends Fragment implements OnMapReadyCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -36,10 +41,11 @@ public class emailWijzigenFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private TextView textView;
-    private FirebaseAuth mAuth;
+    private GoogleMap mMap;
+    private MapView map_view;
+    private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
-    public emailWijzigenFragment() {
+    public LocatieMapFragment() {
         // Required empty public constructor
     }
 
@@ -49,11 +55,11 @@ public class emailWijzigenFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment emailWijzigenFragment.
+     * @return A new instance of fragment LocatieMapFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static emailWijzigenFragment newInstance(String param1, String param2) {
-        emailWijzigenFragment fragment = new emailWijzigenFragment();
+    public static LocatieMapFragment newInstance(String param1, String param2) {
+        LocatieMapFragment fragment = new LocatieMapFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -69,19 +75,23 @@ public class emailWijzigenFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        mAuth = FirebaseAuth.getInstance();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootview = inflater.inflate(R.layout.fragment_email_wijzigen, container, false);
-        String huidigeEmail = mAuth.getCurrentUser().getEmail();
-        textView = (TextView) rootview.findViewById(R.id.edit_emailWijzigen_huidigEmail);
-        textView.setText(huidigeEmail);
+        View rootview = inflater.inflate(R.layout.fragment_locatie_map, container, false);
 
+        Bundle mapViewBundle = null;
+        if (savedInstanceState != null) {
+            mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);
+        }
 
+        map_view = rootview.findViewById(R.id.mapView);
+        map_view.onCreate(mapViewBundle);
+        map_view.getMapAsync(this);
         return rootview;
     }
 
@@ -124,7 +134,12 @@ public class emailWijzigenFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void AnnuleerEmailWijzigen(View v){
-        Navigation.findNavController(v).navigate(R.id.action_emailWijzigen_to_instellingen);
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
     }
 }
