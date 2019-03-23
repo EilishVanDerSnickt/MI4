@@ -12,9 +12,9 @@
 
         <Button
             android:id="@+id/btn_annuleerActiviteit"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:drawableBottom="?android:attr/homeAsUpIndicator"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?android:attr/homeAsUpIndicator"
             app:layout_constraintStart_toStartOf="@id/text_nieuweActiveit"
             app:layout_constraintTop_toTopOf="parent"
             android:onClick="annuleerActiviteit"/>

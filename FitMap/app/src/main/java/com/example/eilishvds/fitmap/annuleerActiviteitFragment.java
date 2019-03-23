@@ -3,6 +3,8 @@ package com.example.eilishvds.fitmap;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -118,10 +120,10 @@ public class annuleerActiviteitFragment extends Fragment {
     }
 
     public void bevesting(View v){
-        Navigation.findNavController(v).navigate(R.id.action_aanmakenActiviteit_to_home);
+        Navigation.findNavController(v).navigate(R.id.action_annuleerActiviteit_to_home);
     }
 
     public void annulleer(View v){
-        Navigation.findNavController(v).navigate(R.id.action_aanmakenActiviteit_to_locatieMap);
+        Navigation.findNavController(v).navigate(R.id.action_annuleerActiviteit_to_locatieMap);
     }
 }

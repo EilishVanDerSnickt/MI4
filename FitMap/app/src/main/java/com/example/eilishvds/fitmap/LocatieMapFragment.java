@@ -1,19 +1,25 @@
 package com.example.eilishvds.fitmap;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,7 +28,9 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 
 import androidx.navigation.Navigation;
 
@@ -35,7 +43,7 @@ import androidx.navigation.Navigation;
  * Use the {@link LocatieMapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LocatieMapFragment extends Fragment implements OnMapReadyCallback {
+public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -50,6 +58,7 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private MapView map_view;
     private View rootview;
+    private static final int MY_REQUEST_INT = 117;
 
     public LocatieMapFragment() {
         // Required empty public constructor
@@ -87,7 +96,7 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getActivity().getWindow().setLayout((int) (width), (int)(height));
+        getActivity().getWindow().setLayout((int) (width), (int) (height));
     }
 
     @Override
@@ -104,7 +113,7 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback {
 
         map_view = (MapView) rootview.findViewById(R.id.mapView);
 
-        if (map_view != null){
+        if (map_view != null) {
             map_view.onCreate(null);
             map_view.onResume();
             map_view.getMapAsync(this);
@@ -135,6 +144,35 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback {
         mListener = null;
     }
 
+    @Override
+    public void onCameraMove() {
+
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
+
+    @Override
+    public void onPolylineClick(Polyline polyline) {
+
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        return false;
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -156,9 +194,44 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback {
         MapsInitializer.initialize(getContext());
 
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_REQUEST_INT);
+
+            }
+            Toast.makeText(this.getContext(), "You have no permissions",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            mMap.setMyLocationEnabled(true);
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+            mMap.getUiSettings().setScrollGesturesEnabled(true);
+            mMap.getUiSettings().setZoomGesturesEnabled(true);
+            mMap.getUiSettings().setCompassEnabled(true);
+            mMap.getUiSettings().setIndoorLevelPickerEnabled(true);
+            mMap.getUiSettings().setMapToolbarEnabled(false);
+            mMap.setBuildingsEnabled(true);
+            mMap.getCameraPosition();
+        }
+
+        mMap.setOnMyLocationClickListener(this);
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMapClickListener(this);
+        mMap.setOnPolylineClickListener(this);
+
+        LatLng plaats = new LatLng(50, 4);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
 
     }
 

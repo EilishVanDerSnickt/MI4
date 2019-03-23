@@ -8,7 +8,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/LocatieMap_ConstraintLayout">
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
@@ -17,8 +18,8 @@
 
         <Button
             android:id="@+id/btn_annuleerLocatieMap"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="?android:attr/homeAsUpIndicator"
             app:layout_constraintStart_toStartOf="@id/mapView"
             app:layout_constraintTop_toTopOf="parent"
