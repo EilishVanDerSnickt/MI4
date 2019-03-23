@@ -48,6 +48,8 @@
         <action android:id="@+id/action_instellingen_to_home" app:destination="@+id/homeFragment"/>
         <action android:id="@+id/action_instellingen_to_wachtwoordWijzigen" app:destination="@+id/wachtwoordWijzigenFragment"/>
         <action android:id="@+id/action_instellingen_to_emailWijzigen" app:destination="@+id/emailWijzigenFragment"/>
+        <action android:id="@+id/action_instellingen_to_popup" app:destination="@+id/popupFragment"/>
+        <action android:id="@+id/action_instellingen_to_login" app:destination="@+id/loginFragment"/>
     </fragment>
 
     <fragment
@@ -56,6 +58,7 @@
         android:label="fragment_aanmaken_activiteit"
         tools:layout="@layout/fragment_aanmaken_activiteit">
         <action android:id="@+id/action_aanmakenActiviteit_to_home" app:destination="@+id/homeFragment"/>
+        <action android:id="@+id/action_aanmakenActiviteit_to_locatieMap" app:destination="@+id/locatieMapFragment"/>
     </fragment>
 
     <fragment
@@ -73,4 +76,31 @@
         tools:layout="@layout/fragment_email_wijzigen">
         <action android:id="@+id/action_emailWijzigen_to_instellingen" app:destination="@+id/settingsFragment"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/popupFragment"
+        android:name="com.example.eilishvds.fitmap.popupFragment"
+        android:label="fragment_popup"
+        tools:layout="@layout/fragment_popup">
+        <action android:id="@+id/action_popup_to_instellingen" app:destination="@+id/settingsFragment"/>
+        <action android:id="@+id/action_popup_to_inloggen" app:destination="@+id/loginFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/locatieMapFragment"
+        android:name="com.example.eilishvds.fitmap.LocatieMapFragment"
+        android:label="fragment_locatie_map"
+        tools:layout="@layout/fragment_locatie_map">
+        <action android:id="@+id/action_locatieMap_to_annuleerActiviteit" app:destination="@+id/annuleerActiviteitFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/annuleerActiviteitFragment"
+        android:name="com.example.eilishvds.fitmap.annuleerActiviteitFragment"
+        android:label="fragment_annuleer_activiteit"
+        tools:layout="@layout/fragment_annuleer_activiteit">
+        <action android:id="@+id/action_annuleerActiviteit_to_locatieMap" app:destination="@+id/locatieMapFragment"/>
+        <action android:id="@+id/action_annuleerActiviteit_to_home" app:destination="@+id/homeFragment"/>
+    </fragment>
+
 </navigation>

@@ -80,7 +80,8 @@
             android:layout_marginLeft="2dp"
             android:text="Op basis van locatie"
             app:layout_constraintLeft_toRightOf="@id/btn_tekenRoute"
-            app:layout_constraintTop_toBottomOf="@id/edit_beschrijvingActiviteit" />
+            app:layout_constraintTop_toBottomOf="@id/edit_beschrijvingActiviteit"
+            android:onClick="activiteitLocatie"/>
 
     </android.support.constraint.ConstraintLayout>
 

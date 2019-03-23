@@ -23,10 +23,10 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
-            android:text="Huidig wachtwoord"
+            android:text="Emailadres"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/text_huidigWachtwoord"
+            android:id="@+id/text_emailadres"
             android:textSize="16dp"
             android:textColor="#6E6E6E"
             app:layout_constraintTop_toBottomOf="@id/text_wachtwoordWijzigen"
@@ -35,54 +35,18 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="42dp"
-            android:inputType="textPassword"
+            android:inputType="textEmailAddress"
             android:ems="10"
-            android:id="@+id/edit_wachtwoordWijzigen_huidigWachtwoord"
-            app:layout_constraintTop_toBottomOf="@id/text_huidigWachtwoord"/>
-
-        <TextView
-            android:text="Nieuw wachtwoord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/text_nieuwWachtwoord"
-            android:textSize="16dp"
-            android:textColor="#6E6E6E"
-            app:layout_constraintTop_toBottomOf="@id/edit_wachtwoordWijzigen_huidigWachtwoord"
-            android:layout_marginTop="32dp"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/edit_wachtwoordWijzigen_nieuwWachtwoord"
-            app:layout_constraintTop_toBottomOf="@id/text_nieuwWachtwoord"/>
-
-        <TextView
-            android:text="Herhaal nieuw wachtwoord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/text_nieuwWachtwoord2"
-            android:textSize="16dp"
-            android:textColor="#6E6E6E"
-            app:layout_constraintTop_toBottomOf="@id/edit_wachtwoordWijzigen_nieuwWachtwoord"
-            android:layout_marginTop="32dp"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/edit_wachtwoordWijzigen_nieuwWachtwoord2"
-            app:layout_constraintTop_toBottomOf="@id/text_nieuwWachtwoord2"/>
+            android:id="@+id/edit_wachtwoordWijzigen_emailadres"
+            app:layout_constraintTop_toBottomOf="@id/text_emailadres"/>
 
         <Button
             android:text="Wachtwoord wijzigen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btn_wachtwoordWijzigen2"
-            android:onClick="wachtwoordIsGewijzigd"
-            app:layout_constraintTop_toBottomOf="@+id/edit_wachtwoordWijzigen_nieuwWachtwoord2"
+            android:onClick="wachtwoordWijzigen"
+            app:layout_constraintTop_toBottomOf="@+id/edit_wachtwoordWijzigen_emailadres"
             android:layout_marginTop="16dp"
             android:backgroundTint="#01DFA5"
             android:textColor="#FFFFFF"/>

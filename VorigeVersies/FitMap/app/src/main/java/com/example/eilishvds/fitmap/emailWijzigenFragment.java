@@ -3,10 +3,15 @@ package com.example.eilishvds.fitmap;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.navigation.Navigation;
 
@@ -30,6 +35,9 @@ public class emailWijzigenFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private TextView textView;
+    private FirebaseAuth mAuth;
 
     public emailWijzigenFragment() {
         // Required empty public constructor
@@ -60,13 +68,21 @@ public class emailWijzigenFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_email_wijzigen, container, false);
+        View rootview = inflater.inflate(R.layout.fragment_email_wijzigen, container, false);
+        String huidigeEmail = mAuth.getCurrentUser().getEmail();
+        textView = (TextView) rootview.findViewById(R.id.edit_emailWijzigen_huidigEmail);
+        textView.setText(huidigeEmail);
+
+
+        return rootview;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

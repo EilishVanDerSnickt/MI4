@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".annuleerActiviteitFragment">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ben je zeker dat je deze activiteit wil annuleren?"
+            android:textSize="25dp"
+            android:textColor="#000000"
+            android:id="@+id/text_annulatie_titel"
+            android:paddingTop="5dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wijzigingen worden niet opgeslagen!"
+            android:textSize="15dp"
+            android:id="@+id/text_annulatie_warning"
+            app:layout_constraintTop_toBottomOf="@id/text_annulatie_titel"
+            android:textAlignment="center"
+            android:paddingTop="20dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_annulatie_annuleren"
+            android:textSize="15dp"
+            android:text="Annuleren"
+            app:layout_constraintTop_toBottomOf="@id/text_annulatie_warning"
+            app:layout_constraintEnd_toStartOf="@id/btn_annulatie_bevestigen"
+            android:onClick="annuleerAnnulatie"
+            android:layout_marginTop="20dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_annulatie_bevestigen"
+            android:text="Bevestigen"
+            android:textSize="15dp"
+            app:layout_constraintEnd_toEndOf="@id/text_annulatie_warning"
+            app:layout_constraintTop_toBottomOf="@id/text_annulatie_warning"
+            android:backgroundTint="#DF013A"
+            android:textColor="#FFFFFF"
+            android:onClick="bevestingAnnulatie"
+            android:layout_marginTop="20dp"/>
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

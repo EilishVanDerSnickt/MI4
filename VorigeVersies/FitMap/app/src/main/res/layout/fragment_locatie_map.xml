@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".LocatieMapFragment">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:id="@+id/btn_annuleerLocatieMap"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="?android:attr/homeAsUpIndicator"
+            app:layout_constraintStart_toStartOf="@id/mapView"
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="annuleerlocatieMap"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_beindigActiviteit"
+            android:text="beëindig activiteit"
+            android:onClick="stopActiviteit"
+            app:layout_constraintBottom_toBottomOf="@id/mapView"
+            app:layout_constraintStart_toStartOf="@id/mapView"
+            android:layout_marginLeft="110dp"/>
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".wachtwoordWijzigenFragment">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:text="Wachtwoord wijzigen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_wachtwoordWijzigen"
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:textColor="#424242"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:text="Huidig wachtwoord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_huidigWachtwoord"
+            android:textSize="16dp"
+            android:textColor="#6E6E6E"
+            app:layout_constraintTop_toBottomOf="@id/text_wachtwoordWijzigen"
+            android:layout_marginTop="32dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/edit_wachtwoordWijzigen_huidigWachtwoord"
+            app:layout_constraintTop_toBottomOf="@id/text_huidigWachtwoord"/>
+
+        <TextView
+            android:text="Nieuw wachtwoord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_nieuwWachtwoord"
+            android:textSize="16dp"
+            android:textColor="#6E6E6E"
+            app:layout_constraintTop_toBottomOf="@id/edit_wachtwoordWijzigen_huidigWachtwoord"
+            android:layout_marginTop="32dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/edit_wachtwoordWijzigen_nieuwWachtwoord"
+            app:layout_constraintTop_toBottomOf="@id/text_nieuwWachtwoord"/>
+
+        <TextView
+            android:text="Herhaal nieuw wachtwoord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_nieuwWachtwoord2"
+            android:textSize="16dp"
+            android:textColor="#6E6E6E"
+            app:layout_constraintTop_toBottomOf="@id/edit_wachtwoordWijzigen_nieuwWachtwoord"
+            android:layout_marginTop="32dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/edit_wachtwoordWijzigen_nieuwWachtwoord2"
+            app:layout_constraintTop_toBottomOf="@id/text_nieuwWachtwoord2"/>
+
+        <Button
+            android:text="Wachtwoord wijzigen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_wachtwoordWijzigen2"
+            android:onClick="wachtwoordIsGewijzigd"
+            app:layout_constraintTop_toBottomOf="@+id/edit_wachtwoordWijzigen_nieuwWachtwoord2"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#01DFA5"
+            android:textColor="#FFFFFF"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Annuleer"
+            android:textAlignment="center"
+            android:textColor="#0174DF"
+            android:id="@+id/text_annuleer_wijzigWachtwoord"
+            app:layout_constraintTop_toBottomOf="@+id/btn_wachtwoordWijzigen2"
+            android:textSize="10dp"
+            android:onClick="annuleerWijzigWachtwoord"
+            android:layout_marginTop="16dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

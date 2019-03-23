@@ -111,4 +111,8 @@ public class aanmakenActiviteit extends Fragment {
     public void home(View v){
         Navigation.findNavController(v).navigate(R.id.action_aanmakenActiviteit_to_home);
     }
+
+    public void activiteitLocatie(View v){
+        Navigation.findNavController(v).navigate(R.id.action_aanmakenActiviteit_to_locatieMap);
+    }
 }
