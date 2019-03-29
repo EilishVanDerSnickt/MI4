@@ -59,6 +59,7 @@
         tools:layout="@layout/fragment_aanmaken_activiteit">
         <action android:id="@+id/action_aanmakenActiviteit_to_home" app:destination="@+id/homeFragment"/>
         <action android:id="@+id/action_aanmakenActiviteit_to_locatieMap" app:destination="@+id/locatieMapFragment"/>
+        <action android:id="@+id/action_aanmakenActiviteit_to_tekenMap" app:destination="@+id/tekenMapFragment"/>
     </fragment>
 
     <fragment
@@ -92,6 +93,7 @@
         android:label="fragment_locatie_map"
         tools:layout="@layout/fragment_locatie_map">
         <action android:id="@+id/action_locatieMap_to_annuleerActiviteit" app:destination="@+id/annuleerActiviteitFragment"/>
+        <action android:id="@+id/action_locatieMap_to_infoActiviteit" app:destination="@+id/infoActiviteitFragment"/>
     </fragment>
 
     <fragment
@@ -101,6 +103,33 @@
         tools:layout="@layout/fragment_annuleer_activiteit">
         <action android:id="@+id/action_annuleerActiviteit_to_locatieMap" app:destination="@+id/locatieMapFragment"/>
         <action android:id="@+id/action_annuleerActiviteit_to_home" app:destination="@+id/homeFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/tekenMapFragment"
+        android:name="com.example.eilishvds.fitmap.tekenMapFragment"
+        android:label="fragment_teken_map"
+        tools:layout="@layout/fragment_teken_map">
+        <action android:id="@+id/action_tekenMap_to_annuleerActivteitTeken" app:destination="@+id/annuleerActiviteitTekenFragment"/>
+        <action android:id="@+id/action_tekenMap_to_infoActiviteit" app:destination="@+id/infoActiviteitFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/annuleerActiviteitTekenFragment"
+        android:name="com.example.eilishvds.fitmap.annuleerActiviteitTekenFragment"
+        android:label="fragment_annuleer_activiteit_teken"
+        tools:layout="@layout/fragment_annuleer_activiteit_teken">
+        <action android:id="@+id/action_annuleerActiviteitTeken_to_tekenMap" app:destination="@+id/tekenMapFragment"/>
+        <action android:id="@+id/action_annuleerActiviteitTeken_to_home" app:destination="@+id/homeFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/infoActiviteitFragment"
+        android:name="com.example.eilishvds.fitmap.infoActiviteitFragment"
+        android:label="fragment_info_activiteit"
+        tools:layout="@layout/fragment_info_activiteit">
+        <action android:id="@+id/action_infoActiviteit_to_home" app:destination="@+id/homeFragment"/>
+        <action android:id="@+id/action_infoActiviteit_to_aanmakenActiviteit" app:destination="@+id/aanmakenActiviteit"/>
     </fragment>
 
 </navigation>

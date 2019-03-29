@@ -4,35 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".LocatieMapFragment">
+    tools:context=".tekenMapFragment">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/LocatieMap_ConstraintLayout">
+        android:id="@+id/TekenMap_ConstraintLayout">
 
         <com.google.android.gms.maps.MapView
-            android:id="@+id/mapViewLocatie"
+            android:id="@+id/mapViewTeken"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
         <Button
-            android:id="@+id/btn_annuleerLocatieMap"
+            android:id="@+id/btn_annuleerTekenMap"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?android:attr/homeAsUpIndicator"
-            app:layout_constraintStart_toStartOf="@id/mapViewLocatie"
+            app:layout_constraintStart_toStartOf="@id/mapViewTeken"
             app:layout_constraintTop_toTopOf="parent"
-            android:onClick="annuleerlocatieMap"/>
+            android:onClick="annuleerTekenMap"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_beindigActiviteitLocatir"
+            android:id="@+id/btn_beindigActiviteitTeken"
             android:text="beëindig activiteit"
-            android:onClick="stopActiviteitLocatie"
-            app:layout_constraintBottom_toBottomOf="@id/mapViewLocatie"
-            app:layout_constraintStart_toStartOf="@id/mapViewLocatie"
+            android:onClick="stopActiviteitTeken"
+            app:layout_constraintBottom_toBottomOf="@id/mapViewTeken"
+            app:layout_constraintStart_toStartOf="@id/mapViewTeken"
             android:layout_marginLeft="110dp"/>
     </android.support.constraint.ConstraintLayout>
 

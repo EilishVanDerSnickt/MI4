@@ -71,7 +71,8 @@
             android:layout_width="190dp"
             android:layout_height="wrap_content"
             android:text="Teken een route"
-            app:layout_constraintTop_toBottomOf="@id/edit_beschrijvingActiviteit" />
+            app:layout_constraintTop_toBottomOf="@id/edit_beschrijvingActiviteit"
+            android:onClick="activiteitTeken"/>
 
         <Button
             android:id="@+id/btn_locatieRoute"

@@ -15,12 +15,12 @@ import androidx.navigation.Navigation;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link aanmakenActiviteit.OnFragmentInteractionListener} interface
+ * {@link annuleerActiviteitTekenFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link aanmakenActiviteit#newInstance} factory method to
+ * Use the {@link annuleerActiviteitTekenFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class aanmakenActiviteit extends Fragment {
+public class annuleerActiviteitTekenFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -32,7 +32,7 @@ public class aanmakenActiviteit extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public aanmakenActiviteit() {
+    public annuleerActiviteitTekenFragment() {
         // Required empty public constructor
     }
 
@@ -42,11 +42,11 @@ public class aanmakenActiviteit extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment aanmakenActiviteit.
+     * @return A new instance of fragment annuleerActiviteitTekenFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static aanmakenActiviteit newInstance(String param1, String param2) {
-        aanmakenActiviteit fragment = new aanmakenActiviteit();
+    public static annuleerActiviteitTekenFragment newInstance(String param1, String param2) {
+        annuleerActiviteitTekenFragment fragment = new annuleerActiviteitTekenFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,13 +61,21 @@ public class aanmakenActiviteit extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+
+        getActivity().getWindow().setLayout((int) (width*0.8), (int)(height*0.4));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_aanmaken_activiteit, container, false);
+        return inflater.inflate(R.layout.fragment_annuleer_activiteit_teken, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -109,15 +117,11 @@ public class aanmakenActiviteit extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void home(View v){
-        Navigation.findNavController(v).navigate(R.id.action_aanmakenActiviteit_to_home);
+    public void bevesting(View v){
+        Navigation.findNavController(v).navigate(R.id.action_annuleerActiviteitTeken_to_home);
     }
 
-    public void activiteitLocatie(View v){
-        Navigation.findNavController(v).navigate(R.id.action_aanmakenActiviteit_to_locatieMap);
-    }
-
-    public void activiteitTeken(View v){
-        Navigation.findNavController(v).navigate(R.id.action_aanmakenActiviteit_to_tekenMap);
+    public void annulleer(View v){
+        Navigation.findNavController(v).navigate(R.id.action_annuleerActiviteitTeken_to_tekenMap);
     }
 }

@@ -30,7 +30,7 @@ import androidx.navigation.Navigation;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener, popupFragment.OnFragmentInteractionListener, LocatieMapFragment.OnFragmentInteractionListener, annuleerActiviteitFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener, popupFragment.OnFragmentInteractionListener, LocatieMapFragment.OnFragmentInteractionListener, annuleerActiviteitFragment.OnFragmentInteractionListener, tekenMapFragment.OnFragmentInteractionListener, annuleerActiviteitTekenFragment.OnFragmentInteractionListener, infoActiviteitFragment.OnFragmentInteractionListener{
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private popupFragment popup = new popupFragment();
     private LocatieMapFragment locatieMap = new LocatieMapFragment();
     private annuleerActiviteitFragment annuleerActiviteit = new annuleerActiviteitFragment();
+    private tekenMapFragment tekenMap = new tekenMapFragment();
+    private annuleerActiviteitTekenFragment annuleerTekenActiviteit = new annuleerActiviteitTekenFragment();
+    private infoActiviteitFragment infoActiviteit = new infoActiviteitFragment();
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -432,16 +435,48 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     public void annuleerlocatieMap(View v){
         locatieMap.annuleer(v);
     }
-    public void bevestingAnnulatie(View v){
+    public void bevestingAnnulatieLocatie(View v){
         annuleerActiviteit.bevesting(v);
     }
 
-    public void annuleerAnnulatie(View v){
+    public void annuleerAnnulatieLocatie(View v){
         annuleerActiviteit.annulleer(v);
     }
 
     public void activiteitLocatie(View v){
         activiteit.activiteitLocatie(v);
+    }
+
+    public void annuleerTekenMap(View v){
+        tekenMap.annuleer(v);
+    }
+
+    public void activiteitTeken(View v){
+        activiteit.activiteitTeken(v);
+    }
+
+    public void bevestingAnnulatieTeken(View v){
+        annuleerTekenActiviteit.bevesting(v);
+    }
+
+    public void annuleerAnnulatieTeken(View v){
+        annuleerTekenActiviteit.annulleer(v);
+    }
+
+    public void stopActiviteitTeken(View v){
+        tekenMap.stopActiviteit(v);
+    }
+
+    public void stopActiviteitLocatie(View v){
+        locatieMap.stopActiviteit(v);
+    }
+
+    public void bekijkProfiel(View v){
+        infoActiviteit.naarProfiel(v);
+    }
+
+    public void nieuweActiviteit(View v){
+        infoActiviteit.nieuweActiviteit(v);
     }
 }
 

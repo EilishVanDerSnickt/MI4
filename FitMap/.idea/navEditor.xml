@@ -13,8 +13,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-185" />
-                            <option name="y" value="303" />
+                            <option name="x" value="202" />
+                            <option name="y" value="612" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -29,6 +29,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_aanmakenActiviteit_to_tekenMap">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
                         </option>
                       </LayoutPositions>
@@ -39,8 +44,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-184" />
-                            <option name="y" value="-132" />
+                            <option name="x" value="-461" />
+                            <option name="y" value="-14" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -60,13 +65,39 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="annuleerActiviteitTekenFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="152" />
+                            <option name="y" value="-14" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_annuleerActiviteitTeken_to_home">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_annuleerActiviteitTeken_to_tekenMap">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="emailWijzigenFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="159" />
-                            <option name="y" value="514" />
+                            <option name="x" value="-77" />
+                            <option name="y" value="1370" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -86,8 +117,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-576" />
-                            <option name="y" value="480" />
+                            <option name="x" value="-424" />
+                            <option name="y" value="644" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -107,18 +138,35 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="infoActiviteitFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="1146" />
+                            <option name="y" value="372" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="locatieMapFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="165" />
-                            <option name="y" value="55" />
+                            <option name="x" value="617" />
+                            <option name="y" value="602" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
                             <entry key="action_locatieMap_to_annuleerActiviteit">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_locatieMap_to_infoActiviteit">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -133,8 +181,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-929" />
-                            <option name="y" value="481" />
+                            <option name="x" value="-1475" />
+                            <option name="y" value="1449" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -164,8 +212,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-538" />
-                            <option name="y" value="1413" />
+                            <option name="x" value="-338" />
+                            <option name="y" value="1889" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -190,8 +238,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-538" />
-                            <option name="y" value="971" />
+                            <option name="x" value="-892" />
+                            <option name="y" value="1530" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -211,8 +259,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-191" />
-                            <option name="y" value="711" />
+                            <option name="x" value="-668" />
+                            <option name="y" value="1269" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -247,13 +295,39 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="tekenMapFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="613" />
+                            <option name="y" value="212" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_tekenMap_to_annuleerActivteitTeken">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_tekenMap_to_infoActiviteit">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="wachtwoordVergetenFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-571" />
-                            <option name="y" value="58" />
+                            <option name="x" value="-1128" />
+                            <option name="y" value="2011" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -273,8 +347,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="166" />
-                            <option name="y" value="889" />
+                            <option name="x" value="-68" />
+                            <option name="y" value="1000" />
                           </Point>
                         </option>
                         <option name="myPositions">
