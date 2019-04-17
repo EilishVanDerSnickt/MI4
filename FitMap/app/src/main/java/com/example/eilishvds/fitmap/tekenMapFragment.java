@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +28,19 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.navigation.Navigation;
 
+import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +69,10 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
     private ArrayList markerPoints = new ArrayList();
     private Polyline line;
     private final float zoomlevel = 15f;
+
+    private FirebaseFirestore db;
+    private Map<String, Object> map;
+    private int markerteller = 0;
 
     public tekenMapFragment() {
         // Required empty public constructor
@@ -99,6 +111,10 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
         int height = dm.heightPixels;
 
         getActivity().getWindow().setLayout((int) (width), (int) (height));
+
+        db = FirebaseFirestore.getInstance();
+
+        map = new HashMap<>();
     }
 
     @Override
@@ -156,6 +172,7 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
     public void onMapClick(LatLng point) {
         mMap.addMarker(new MarkerOptions().position(point).title("Marker"));
         markerPoints.add(point);
+        markerteller = markerteller + 1;
         mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
 
 
@@ -172,12 +189,14 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
             line.setPoints(points);
         }
 
+        GeoPoint geoPoint = new GeoPoint(point.latitude, point.longitude);
         Context context = this.getContext();
         int duration = Toast.LENGTH_SHORT;
 
-        Toast toast = Toast.makeText(context, point.toString(), duration);
+        Toast toast = Toast.makeText(context, geoPoint.toString(), duration);
         toast.show();
 
+        map.put("Point" + markerteller, geoPoint);
     }
 
     @Override
@@ -265,7 +284,42 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
         Navigation.findNavController(v).navigate(R.id.action_tekenMap_to_annuleerActivteitTeken);
     }
 
-    public void stopActiviteit(View v){
-        Navigation.findNavController(v).navigate(R.id.action_tekenMap_to_infoActiviteit);
+    public void stopActiviteit(View v, int routeteller_route){
+        Context context = getContext();
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, routeteller_route, duration);
+        toast.show();
+
+        routeteller_route = routeteller_route + 1;
+
+        db.collection("RoutePoints").document("route" + routeteller_route)
+                .set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Context context = getContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
+                        toast.show();
+
+                        Navigation.findNavController(rootview.findViewById(R.id.fragment)).navigate(R.id.action_tekenMap_to_infoActiviteit);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                        Context context = getContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "Error writing document", duration);
+                        toast.show();
+                    }
+                });
     }
+
+
 }

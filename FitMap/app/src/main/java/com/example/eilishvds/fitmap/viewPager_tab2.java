@@ -19,6 +19,6 @@ public class viewPager_tab2 extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        return inflater.inflate(R.layout.viewpager_tab1, container, false);
+        return inflater.inflate(R.layout.viewpager_tab2, container, false);
     }
 }

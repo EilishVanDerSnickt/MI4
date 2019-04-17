@@ -9,21 +9,34 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.okhttp.Route;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 import androidx.navigation.Navigation;
@@ -41,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private CheckBox checkbox;
     private boolean checked;
     private TextView textview;
+    private ScrollView scrollView;
+    private CardView cardView;
+
     private homeFragment home = new homeFragment();
     private LoginFragment login = new LoginFragment();
     private registrerenFragment registreren = new registrerenFragment();
@@ -58,6 +74,13 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+    private FirebaseFirestore db;
+    private Map<String, Object> map;
+    private int routeteller_beschrijving = 0;
+    private int routeteller_gegevens = 0;
+    private int routeteller_route = 0;
+
+    private ArrayList<String> titelRoutes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        map = new HashMap<>();
     }
 
     @Override
@@ -444,7 +470,69 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
 
     public void activiteitLocatie(View v){
-        activiteit.activiteitLocatie(v);
+        edittext1 = (EditText) findViewById(R.id.edit_titelActiviteit);
+        edittext2 = (EditText) findViewById(R.id.edit_beschrijvingActiviteit);
+
+        String titel = edittext1.getText().toString();
+        String beschrijving = edittext2.getText().toString();
+
+        if (!ValideerAanmakenActiviteit(titel, beschrijving)) {
+            return;
+        }
+
+        try{
+            map.put("titel", titel);
+            map.put("beschrijving", beschrijving);
+        } catch (Exception e){
+            Toast.makeText(this, "Exception: " + e,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        routeteller_beschrijving = routeteller_beschrijving + 1;
+
+        db.collection("RouteBeschrijving").document("Route" + routeteller_beschrijving)
+                .set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
+                        toast.show();
+
+                        Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_aanmakenActiviteit_to_locatieMap);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "Error writing document", duration);
+                        toast.show();
+                    }
+                });
+    }
+
+    private boolean ValideerAanmakenActiviteit(String titel, String beschrijving) {
+        boolean valid = true;
+
+        if (titel.isEmpty()) {
+            edittext1 = (EditText) findViewById(R.id.edit_titelActiviteit);
+            edittext1.setError("This field is required");
+            valid = false;
+        }
+        if (beschrijving.isEmpty()) {
+            edittext2 = (EditText) findViewById(R.id.edit_beschrijvingActiviteit);
+            edittext2.setError("This field is required");
+            valid = false;
+        }
+
+        return valid;
     }
 
     public void annuleerTekenMap(View v){
@@ -452,7 +540,51 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
 
     public void activiteitTeken(View v){
-        activiteit.activiteitTeken(v);
+        edittext1 = (EditText) findViewById(R.id.edit_titelActiviteit);
+        edittext2 = (EditText) findViewById(R.id.edit_beschrijvingActiviteit);
+
+        String titel = edittext1.getText().toString();
+        String beschrijving = edittext2.getText().toString();
+
+        if (!ValideerAanmakenActiviteit(titel, beschrijving)) {
+            return;
+        }
+
+        try{
+            map.put("titel", titel);
+            map.put("beschrijving", beschrijving);
+        } catch (Exception e){
+            Toast.makeText(MainActivity.this, "Exception: " + e,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        routeteller_beschrijving = routeteller_beschrijving + 1;
+        db.collection("RouteBeschrijving").document("Route" + routeteller_beschrijving)
+                .set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
+                        toast.show();
+
+                        Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_aanmakenActiviteit_to_tekenMap);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "Error writing document", duration);
+                        toast.show();
+                    }
+                });
     }
 
     public void bevestingAnnulatieTeken(View v){
@@ -464,7 +596,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
 
     public void stopActiviteitTeken(View v){
-        tekenMap.stopActiviteit(v);
+        tekenMap.stopActiviteit(v, routeteller_route);
     }
 
     public void stopActiviteitLocatie(View v){
