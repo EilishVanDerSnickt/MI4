@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,22 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import androidx.navigation.Navigation;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -49,6 +64,13 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     private MapView map_view;
     private View rootview;
     private static final int MY_REQUEST_INT = 117;
+
+    private FirebaseFirestore db;
+
+    private int routeteller_route = 0;
+
+    private Polyline line;
+    private float zoomlevel = 10f;
 
     public infoActiviteitFragment() {
         // Required empty public constructor
@@ -79,6 +101,8 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -163,8 +187,90 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
             mMap.getCameraPosition();
         }
 
-        LatLng plaats = new LatLng(50, 4);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
+        routeteller_route = routeteller_route + 1;
+
+        DocumentReference docRef = db.collection("RoutePoints").document("Route" + routeteller_route);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        List<String> list = new ArrayList<>();
+                        Map<String, Object> map = document.getData();
+
+                        if (map != null){
+                            for (Map.Entry<String, Object> entry : map.entrySet()){
+                                list.add(entry.getValue().toString());
+                            }
+                        }
+                        Context context = getContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "DocumentSnapshot data: " + document.getData(), duration);
+                        toast.show();
+
+                        tekenMarker(document, list);
+
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                        Context context = getContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "No such document", duration);
+                        toast.show();
+
+                        LatLng plaats = new LatLng(50, 4);
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                    Context context = getContext();
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, "get failed with " + task.getException(), duration);
+                    toast.show();
+
+                    LatLng plaats = new LatLng(50, 4);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
+                }
+            }
+        });
+        // [END get_document]
+    }
+
+    private void tekenMarker(DocumentSnapshot document, List<String> list) {
+        int i = 1;
+        try {
+            for (String s : list){
+                GeoPoint punt1 = document.getGeoPoint("Point" + i);
+
+                i = i+1;
+
+                GeoPoint punt2 = document.getGeoPoint("Point" + i);
+
+                assert punt1 != null;
+                LatLng origin = new LatLng(punt1.getLatitude(), punt1.getLongitude());
+                LatLng dest = null;
+                if (punt2 != null) {
+                    dest = new LatLng(punt2.getLatitude(), punt2.getLongitude());
+                }
+                line = mMap.addPolyline(new PolylineOptions().clickable(false).add(origin, dest));
+            }
+        }catch (Exception e){
+            Context context = getContext();
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, e.toString(), duration);
+            toast.show();
+        }
+
+
+        LatLng plaats = new LatLng(document.getGeoPoint("Point1").getLatitude(), document.getGeoPoint("Point" + document.getData().size()).getLongitude());
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(plaats, zoomlevel));
+
     }
 
     /**

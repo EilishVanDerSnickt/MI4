@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -73,6 +74,7 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
     private FirebaseFirestore db;
     private Map<String, Object> map;
     private int markerteller = 0;
+    private int routeteller_route = 1;
 
     public tekenMapFragment() {
         // Required empty public constructor
@@ -197,6 +199,31 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
         toast.show();
 
         map.put("Point" + markerteller, geoPoint);
+
+        db.collection("RoutePoints").document("Route" + routeteller_route)
+        .set(map)
+        .addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "DocumentSnapshot successfully written!");
+                Context context = getContext();
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
+                toast.show();
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error writing document", e);
+                Context context = getContext();
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, "Error writing document", duration);
+                toast.show();
+            }
+        });
     }
 
     @Override
@@ -284,42 +311,55 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
         Navigation.findNavController(v).navigate(R.id.action_tekenMap_to_annuleerActivteitTeken);
     }
 
-    public void stopActiviteit(View v, int routeteller_route){
-        Context context = getContext();
-        int duration = Toast.LENGTH_SHORT;
+    public void stopActiviteit(/*int routeteller_route*/ View v){
 
-        Toast toast = Toast.makeText(context, routeteller_route, duration);
-        toast.show();
+        /**
+        try{
+            Context context = getContext();
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, routeteller_route, duration);
+            toast.show();
+
+            routeteller_route = routeteller_route + 1;
+
+            db.collection("RoutePoints").document("route" + routeteller_route)
+                    .set(map)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully written!");
+                            Context context = getContext();
+                            int duration = Toast.LENGTH_SHORT;
+
+                            Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
+                            toast.show();
+
+                            Navigation.findNavController(rootview.findViewById(R.id.fragment)).navigate(R.id.action_tekenMap_to_infoActiviteit);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error writing document", e);
+                            Context context = getContext();
+                            int duration = Toast.LENGTH_SHORT;
+
+                            Toast toast = Toast.makeText(context, "Error writing document", duration);
+                            toast.show();
+                        }
+                    });
+        } catch(Exception e){
+            Context context = getContext();
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, "Exception: " + e, duration);
+            toast.show();
+        }
+         */
 
         routeteller_route = routeteller_route + 1;
 
-        db.collection("RoutePoints").document("route" + routeteller_route)
-                .set(map)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                        Context context = getContext();
-                        int duration = Toast.LENGTH_SHORT;
-
-                        Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
-                        toast.show();
-
-                        Navigation.findNavController(rootview.findViewById(R.id.fragment)).navigate(R.id.action_tekenMap_to_infoActiviteit);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                        Context context = getContext();
-                        int duration = Toast.LENGTH_SHORT;
-
-                        Toast toast = Toast.makeText(context, "Error writing document", duration);
-                        toast.show();
-                    }
-                });
+        Navigation.findNavController(v).navigate(R.id.action_tekenMap_to_infoActiviteit);
     }
-
-
 }
