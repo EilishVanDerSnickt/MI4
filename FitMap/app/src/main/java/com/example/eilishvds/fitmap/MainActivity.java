@@ -598,10 +598,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     public void stopActiviteitTeken(View v){
 
         tekenMap.stopActiviteit(v);
-
-
-
-        //tekenMap.stopActiviteit(routeteller_route);
     }
     public void stopActiviteitLocatie(View v){
         locatieMap.stopActiviteit(v);

@@ -312,52 +312,6 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
     public void stopActiviteit(/*int routeteller_route*/ View v){
-
-        /**
-        try{
-            Context context = getContext();
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, routeteller_route, duration);
-            toast.show();
-
-            routeteller_route = routeteller_route + 1;
-
-            db.collection("RoutePoints").document("route" + routeteller_route)
-                    .set(map)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "DocumentSnapshot successfully written!");
-                            Context context = getContext();
-                            int duration = Toast.LENGTH_SHORT;
-
-                            Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
-                            toast.show();
-
-                            Navigation.findNavController(rootview.findViewById(R.id.fragment)).navigate(R.id.action_tekenMap_to_infoActiviteit);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error writing document", e);
-                            Context context = getContext();
-                            int duration = Toast.LENGTH_SHORT;
-
-                            Toast toast = Toast.makeText(context, "Error writing document", duration);
-                            toast.show();
-                        }
-                    });
-        } catch(Exception e){
-            Context context = getContext();
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, "Exception: " + e, duration);
-            toast.show();
-        }
-         */
-
         routeteller_route = routeteller_route + 1;
 
         Navigation.findNavController(v).navigate(R.id.action_tekenMap_to_infoActiviteit);

@@ -25,13 +25,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,8 +70,17 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     private static final int MY_REQUEST_INT = 117;
 
     private FirebaseFirestore db;
+    private Map<String, Object> map;
 
     private int routeteller_route = 0;
+    private int routeteller_gegevens = 0;
+
+    private final int EARTH_RADIUS = 6371;
+    private double startLat;
+    private double startLong;
+    private double endLat;
+    private double endLong;
+    private double distance = 0;
 
     private Polyline line;
     private float zoomlevel = 10f;
@@ -103,6 +116,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
         }
 
         db = FirebaseFirestore.getInstance();
+        map = new HashMap<>();
     }
 
     @Override
@@ -211,7 +225,8 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                         Toast toast = Toast.makeText(context, "DocumentSnapshot data: " + document.getData(), duration);
                         toast.show();
 
-                        tekenMarker(document, list);
+                        distance = tekenMarker(document, list);
+                        schrijfGegevensweg(distance);
 
 
                     } else {
@@ -241,13 +256,52 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
         // [END get_document]
     }
 
-    private void tekenMarker(DocumentSnapshot document, List<String> list) {
+    private void schrijfGegevensweg(double distance) {
+        try {
+            map.put("Km", distance);
+            map.put("tijd (in minuten)", 0);
+            map.put("Km/h", 0);
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "Exception: " + e,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        routeteller_gegevens = routeteller_gegevens + 1;
+
+        db.collection("RouteGegevens").document("Route" + routeteller_gegevens)
+                .set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Context context = getContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
+                        toast.show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                        Context context = getContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "Error writing document", duration);
+                        toast.show();
+                    }
+                });
+
+    }
+
+    private double tekenMarker(DocumentSnapshot document, List<String> list) {
         int i = 1;
         try {
-            for (String s : list){
+            for (String s : list) {
                 GeoPoint punt1 = document.getGeoPoint("Point" + i);
 
-                i = i+1;
+                i = i + 1;
 
                 GeoPoint punt2 = document.getGeoPoint("Point" + i);
 
@@ -257,9 +311,24 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                 if (punt2 != null) {
                     dest = new LatLng(punt2.getLatitude(), punt2.getLongitude());
                 }
+
+                startLat = punt1.getLatitude();
+                startLong = punt1.getLongitude();
+                assert punt2 != null;
+                endLong = punt2.getLongitude();
+                endLat = punt2.getLatitude();
+
+                distance = distance + distance(startLat, startLong, endLat, endLong);
+
+                Context context = getContext();
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, "KM: " + distance, duration);
+                toast.show();
+
                 line = mMap.addPolyline(new PolylineOptions().clickable(false).add(origin, dest));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Context context = getContext();
             int duration = Toast.LENGTH_SHORT;
 
@@ -271,6 +340,24 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
         LatLng plaats = new LatLng(document.getGeoPoint("Point1").getLatitude(), document.getGeoPoint("Point" + document.getData().size()).getLongitude());
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(plaats, zoomlevel));
 
+        return distance;
+    }
+
+    private double distance(double startLat, double startLong, double endLat, double endLong) {
+        double dLat = Math.toRadians((endLat - startLat));
+        double dLong = Math.toRadians((endLong - startLong));
+
+        startLat = Math.toRadians(startLat);
+        endLat = Math.toRadians(endLat);
+
+        double a = haversin(dLat) + Math.cos(startLat) * Math.cos(endLat) * haversin(dLong);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS * c;
+    }
+
+    private double haversin(double val) {
+        return Math.pow(Math.sin(val / 2), 2);
     }
 
     /**
