@@ -3,19 +3,35 @@ package com.example.eilishvds.fitmap;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import androidx.navigation.Navigation;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -41,7 +57,12 @@ public class homeFragment extends Fragment {
 
     private TabLayout tablayout;
     private ViewPager viewpager;
+    private LinearLayout linearLayout;
     private TextView textView;
+    private View rootview;
+    private CardView cardView;
+
+    private FirebaseFirestore db;
 
     public homeFragment() {
         // Required empty public constructor
@@ -80,13 +101,15 @@ public class homeFragment extends Fragment {
         int height = dm.heightPixels;
 
         getActivity().getWindow().setLayout((int) (width), (int)(height));
+
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootview = inflater.inflate(R.layout.fragment_home, container, false);
+        rootview = inflater.inflate(R.layout.fragment_home, container, false);
 
         viewpager = (ViewPager)rootview.findViewById(R.id.view_pager);
         setupViewPager(viewpager);
@@ -94,8 +117,76 @@ public class homeFragment extends Fragment {
         tablayout = (TabLayout)rootview.findViewById(R.id.tab_layout);
         tablayout.setupWithViewPager(viewpager);
 
+        addTextViews();
+
         return rootview;
     }
+
+    private void addTextViews() {
+        db.collection("RouteBeschrijving")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                List<String> list = new ArrayList<>();
+                                Map<String, Object> map = document.getData();
+
+                                if (map != null){
+                                    for (Map.Entry<String, Object> entry : map.entrySet()){
+                                        list.add(entry.getValue().toString());
+                                    }
+                                }
+                                Context context = getContext();
+                                int duration = Toast.LENGTH_SHORT;
+
+                                Toast toast = Toast.makeText(context, document.getId() + " => " + document.getData(), duration);
+                                toast.show();
+
+                                toonInTextView(document, list, textView);
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            Context context = getContext();
+                            int duration = Toast.LENGTH_SHORT;
+
+                            Toast toast = Toast.makeText(context, "Error getting documents: " + task.getException(), duration);
+                            toast.show();
+                        }
+                    }
+                });
+    }
+
+    private void toonInTextView(QueryDocumentSnapshot document, List<String> list, TextView textView) {
+        try {
+            linearLayout = (LinearLayout) rootview.findViewById(R.id.home_linear_layout);
+            LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            int i = 1;
+            for (String s : list) {
+                if (i % 2 == 1) {
+                    String value = document.getString("titel");
+                    cardView = new CardView(getContext());
+                    this.linearLayout.addView(cardView);
+                    textView = new TextView(getContext());
+                    textView.setLayoutParams(lparams);
+                    textView.setText(value);
+                    textView.setLinksClickable(true);
+                    cardView.addView(textView);
+
+                }
+                i = i + i;
+            }
+        }catch (Exception e){
+            Context context = getContext();
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, "Exception: " + e, duration);
+            toast.show();
+        }
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
