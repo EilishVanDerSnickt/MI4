@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".infoActiviteitFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bekijk je profiel"
+                android:id="@+id/btn_profiel"
+                android:onClick="bekijkProfiel"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Opslaan?"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginRight="10dp"
+                app:layout_constraintTop_toBottomOf="@id/btn_profiel"
+                android:id="@+id/check_opslaan"
+                android:layout_marginTop="5dp"
+                android:enabled="true"/>
+
+            <com.google.android.gms.maps.MapView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:layout_constraintTop_toBottomOf="@id/check_opslaan"
+                android:layout_marginTop="5dp"
+                android:id="@+id/mapViewInfo">
+            </com.google.android.gms.maps.MapView>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recView_info"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                app:layout_constraintTop_toBottomOf="@id/mapViewInfo"
+                android:layout_marginTop="15dp">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="nieuwe activiteit aanmaken"
+                android:id="@+id/btn_info_nieuweActiviteit"
+                android:onClick="nieuweActiviteit"
+                app:layout_constraintTop_toBottomOf="@id/recView_info"
+                android:layout_marginTop="5dp"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
+</FrameLayout>
