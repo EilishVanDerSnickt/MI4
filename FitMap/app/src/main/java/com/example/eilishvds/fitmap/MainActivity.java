@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.nfc.Tag;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -14,6 +16,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.SearchView;
@@ -76,9 +79,38 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private FirebaseUser user;
     private FirebaseFirestore db;
     private Map<String, Object> map;
+
     private int routeteller_beschrijving = 0;
     private int routeteller_gegevens = 0;
     private int routeteller_route = 0;
+
+    /**
+    private long startTime = 0L;
+    private long timeInMilliseconds = 0L;
+    private long timeSwapBuff = 0L;
+    private long updatedTime = 0L;
+    private String tijd = "";
+
+    private Handler customHandler = new Handler();
+    private Runnable updateTimerThread = new Runnable() {
+        @Override
+        public String run() {
+            timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+
+            updatedTime = timeSwapBuff + timeInMilliseconds;
+
+            int secs = (int) (updatedTime / 1000);
+            int mins = secs / 60;
+            secs = secs % 60;
+            int milliseconds = (int) (updatedTime % 1000);
+            customHandler.postDelayed(this, 0);
+
+            tijd = mins + ":" + secs + ":" + milliseconds;
+
+            return tijd;
+        }
+    };
+     */
 
     private ArrayList<String> titelRoutes = new ArrayList<>();
 

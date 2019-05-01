@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.support.constraint.ConstraintSet;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +35,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import androidx.navigation.Navigation;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -44,7 +59,7 @@ import androidx.navigation.Navigation;
  * Use the {@link LocatieMapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, LocationSource.OnLocationChangedListener{
+public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnPolylineClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -61,6 +76,13 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
     private View rootview;
     private static final int MY_REQUEST_INT = 117;
     private final float zoomlevel = 10f;
+    private ArrayList locationPoints = new ArrayList();
+    private Polyline locationLine;
+
+    private FirebaseFirestore db;
+    private Map<String, Object> map;
+    private int markerteller = 0;
+    private int routeteller_route = 1;
 
     public LocatieMapFragment() {
         // Required empty public constructor
@@ -99,6 +121,10 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
         int height = dm.heightPixels;
 
         getActivity().getWindow().setLayout((int) (width), (int) (height));
+
+        db = FirebaseFirestore.getInstance();
+
+        map = new HashMap<>();
     }
 
     @Override
@@ -236,18 +262,100 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(plaats, zoomlevel));
 
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                //locationPoints.clear();
+                try{
+                    LatLng latlngLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(latlngLocation).title("LocatieMarker"));
+                    locationPoints.add(latlngLocation);
+                    markerteller = markerteller + 1;
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latlngLocation));
+
+                    if (locationPoints.size() == 2) {
+                        LatLng origin = (LatLng) locationPoints.get(0);
+                        LatLng dest = (LatLng) locationPoints.get(1);
+                        locationLine = mMap.addPolyline(new PolylineOptions().clickable(true).add(origin, dest));
+                    }
+                    else if (locationPoints.size() > 2) {
+                        List<LatLng> points = locationLine.getPoints();
+                        points.add(latlngLocation);
+                        locationLine.setPoints(points);
+                    }
+
+
+                    GeoPoint geoPoint = new GeoPoint(latlngLocation.latitude, latlngLocation.longitude);
+                    Context context = getContext();
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, geoPoint.toString(), duration);
+                    toast.show();
+
+
+                    mMap.clear();
+
+                    map.put("Point" + markerteller, geoPoint);
+
+                    db.collection("RoutePoints").document("Route" + routeteller_route)
+                            .set(map)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG, "DocumentSnapshot successfully written!");
+                                    Context context = getContext();
+                                    int duration = Toast.LENGTH_SHORT;
+
+                                    Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
+                                    toast.show();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error writing document", e);
+                                    Context context = getContext();
+                                    int duration = Toast.LENGTH_SHORT;
+
+                                    Toast toast = Toast.makeText(context, "Error writing document", duration);
+                                    toast.show();
+                                }
+                            });
+                } catch (Exception e){
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(getContext(), "OnLocationChanged fout: " + e, duration);
+                    toast.show();
+                }
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        });
+
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), zoomlevel));
-    }
 
     public void annuleer(View v){
         Navigation.findNavController(v).navigate(R.id.action_locatieMap_to_annuleerActiviteit);
     }
 
     public void stopActiviteit(View v){
+        routeteller_route = routeteller_route + 1;
         Navigation.findNavController(v).navigate(R.id.action_locatieMap_to_infoActiviteit);
     }
 }

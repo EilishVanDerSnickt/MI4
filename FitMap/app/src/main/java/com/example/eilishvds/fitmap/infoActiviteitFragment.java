@@ -227,8 +227,6 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
 
                         distance = tekenMarker(document, list);
                         schrijfGegevensweg(distance);
-
-
                     } else {
                         Log.d(TAG, "No such document");
                         Context context = getContext();
@@ -256,7 +254,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
         // [END get_document]
     }
 
-    private void schrijfGegevensweg(double distance) {
+    public void schrijfGegevensweg(double distance) {
         try {
             map.put("Km", distance);
             map.put("tijd (in minuten)", 0);
@@ -382,4 +380,5 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     public void nieuweActiviteit(View v){
         Navigation.findNavController(v).navigate(R.id.action_infoActiviteit_to_aanmakenActiviteit);
     }
+
 }
