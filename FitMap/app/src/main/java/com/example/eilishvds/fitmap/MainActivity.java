@@ -23,6 +23,11 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,9 +39,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.okhttp.Route;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +92,21 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     private int routeteller_beschrijving = 0;
     private int routeteller_gegevens = 0;
-    private int routeteller_route = 0;
+    private int routeteller_route;
+
+    private Date startTijd;
+    private Date stopTijd;
+    public long elapsedTijd;
+
+    private final int EARTH_RADIUS = 6371;
+    private double startLat;
+    private double startLong;
+    private double endLat;
+    private double endLong;
+    private double distance = 1;
+    private Polyline line;
+    private float zoomlevel = 10f;
+    private GoogleMap mMap;
 
     /**
     private long startTime = 0L;
@@ -548,6 +572,11 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         toast.show();
                     }
                 });
+
+        startTijd = Calendar.getInstance().getTime();
+
+        Toast toast = Toast.makeText(getApplicationContext(), "Start tijd: " + startTijd, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     private boolean ValideerAanmakenActiviteit(String titel, String beschrijving) {
@@ -631,17 +660,142 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         tekenMap.stopActiviteit(v);
     }
     public void stopActiviteitLocatie(View v){
+        stopTijd = Calendar.getInstance().getTime();
+
+        Toast toast = Toast.makeText(getApplicationContext(), "Stop tijd: " + stopTijd, Toast.LENGTH_SHORT);
+        toast.show();
+
         locatieMap.stopActiviteit(v);
+
+        berekenElapsedTime(startTijd, stopTijd);
+    }
+
+    private void berekenElapsedTime(Date startTijd, Date stopTijd) {
+        elapsedTijd = stopTijd.getTime() - startTijd.getTime();
+
+        Toast toast = Toast.makeText(getApplicationContext(), "elapsed tijd: " + elapsedTijd, Toast.LENGTH_SHORT);
+        toast.show();
+
+        infoActiviteit.tussenTijd = elapsedTijd;
+
+        toast = Toast.makeText(getApplicationContext(), "tussen tijd: " + infoActiviteit.tussenTijd, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public void bekijkProfiel(View v){
+        kijkOfRouteMoetWordenOpgeslagen();
+
         infoActiviteit.naarProfiel(v);
     }
 
+    private void kijkOfRouteMoetWordenOpgeslagen() {
+        checkbox = (CheckBox) findViewById(R.id.check_opslaan);
+
+        if (checkbox.isChecked()) {
+            infoActiviteit.tussenTijd = elapsedTijd;
+
+            Toast toast = Toast.makeText(getApplicationContext(), "tussen tijd: " + infoActiviteit.tussenTijd, Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+
+            routeteller_route = berekenRouteTeller();
+
+            Toast toast = Toast.makeText(getApplicationContext(), "De huidige route is: "+ routeteller_route, Toast.LENGTH_SHORT);
+            toast.show();
+
+
+            db.collection("RouteBeschrijving").document("Route" + routeteller_route)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
+
+                            Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
+                            toast.show();
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error deleting document", e);
+                        }
+                    });
+
+            db.collection("RoutePoints").document("Route" + routeteller_route)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
+
+                            Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
+                            toast.show();
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error deleting document", e);
+                        }
+                    });
+
+            db.collection("RouteGegevens").document("Route" + 1)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
+
+                            Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
+                            toast.show();
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error deleting document", e);
+                        }
+                    });
+        }
+    }
+
+    private int berekenRouteTeller() {
+        db.collection("RouteBeschrijving").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<String> list = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list.add(document.getId());
+                    }
+
+                    routeteller_route = list.size();
+                    Toast toast = Toast.makeText(getApplicationContext(), "Route: " + routeteller_route, Toast.LENGTH_LONG);
+                    toast.show();
+
+                    Log.d(TAG, list.toString());
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+
+                    routeteller_route = 0;
+                }
+            }
+        });
+
+        return routeteller_route;
+    }
+
     public void nieuweActiviteit(View v){
+        kijkOfRouteMoetWordenOpgeslagen();
+
         infoActiviteit.nieuweActiviteit(v);
     }
+
+    public void isOpslaanChecked(View v) {
+
+    }
 }
-
-
-

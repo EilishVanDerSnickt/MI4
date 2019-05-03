@@ -33,8 +33,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,18 +75,21 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     private FirebaseFirestore db;
     private Map<String, Object> map;
 
-    private int routeteller_route = 0;
-    private int routeteller_gegevens = 0;
+    private int routeteller_route = 1;
 
     private final int EARTH_RADIUS = 6371;
     private double startLat;
     private double startLong;
     private double endLat;
     private double endLong;
-    private double distance = 0;
+    private double distance = 1;
 
     private Polyline line;
     private float zoomlevel = 10f;
+
+    private Date beginTijd;
+    private Date eindeTijd;
+    public long tussenTijd;
 
     public infoActiviteitFragment() {
         // Required empty public constructor
@@ -201,7 +207,32 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
             mMap.getCameraPosition();
         }
 
-        routeteller_route = routeteller_route + 1;
+        Toast toast = Toast.makeText(getContext(), "De route_teller:  " + routeteller_route, Toast.LENGTH_LONG);
+        toast.show();
+
+        //ik snap niet waarom het programma deze code overslaat zo kan ik mijn routeteller niet gelijkzetten aan het aantal documents
+        db.collection("RouteBeschrijving").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<String> list = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list.add(document.getId());
+                    }
+
+                    routeteller_route = list.size();
+                    Toast toast = Toast.makeText(getContext(), "Route: " +routeteller_route, Toast.LENGTH_LONG);
+                    toast.show();
+
+                    Log.d(TAG, list.toString());
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+        toast = Toast.makeText(getContext(), "De route_teller:  " + routeteller_route, Toast.LENGTH_LONG);
+        toast.show();
 
         DocumentReference docRef = db.collection("RoutePoints").document("Route" + routeteller_route);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -209,6 +240,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    assert document != null;
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         List<String> list = new ArrayList<>();
@@ -232,11 +264,13 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                         Context context = getContext();
                         int duration = Toast.LENGTH_SHORT;
 
-                        Toast toast = Toast.makeText(context, "No such document", duration);
+                        Toast toast = Toast.makeText(context, "No such document" + tussenTijd, duration);
                         toast.show();
 
                         LatLng plaats = new LatLng(50, 4);
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
+
+                        schrijfGegevensweg(tussenTijd);
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
@@ -257,14 +291,14 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     public void schrijfGegevensweg(double distance) {
         try {
             map.put("Km", distance);
-            map.put("tijd (in minuten)", 0);
+            map.put("tijd (in minuten)", tussenTijd);
             map.put("Km/h", 0);
         } catch (Exception e) {
             Toast.makeText(getActivity(), "Exception: " + e,
                     Toast.LENGTH_SHORT).show();
         }
 
-        routeteller_gegevens = routeteller_gegevens + 1;
+        int routeteller_gegevens = routeteller_route;
 
         db.collection("RouteGegevens").document("Route" + routeteller_gegevens)
                 .set(map)
@@ -380,5 +414,4 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     public void nieuweActiviteit(View v){
         Navigation.findNavController(v).navigate(R.id.action_infoActiviteit_to_aanmakenActiviteit);
     }
-
 }

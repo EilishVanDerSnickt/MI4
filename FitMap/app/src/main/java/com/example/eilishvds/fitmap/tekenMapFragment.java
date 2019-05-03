@@ -28,11 +28,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,7 +78,7 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
     private FirebaseFirestore db;
     private Map<String, Object> map;
     private int markerteller = 0;
-    private int routeteller_route = 1;
+    private int routeteller_route;
 
     public tekenMapFragment() {
         // Required empty public constructor
@@ -290,6 +294,26 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
         LatLng plaats = new LatLng(50, 4);
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(plaats, zoomlevel));
+
+        db.collection("RouteBeschrijving").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<String> list = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list.add(document.getId());
+                    }
+
+                    routeteller_route = list.size();
+                    Toast toast = Toast.makeText(getContext(), "Route: " +routeteller_route, Toast.LENGTH_LONG);
+                    toast.show();
+
+                    Log.d(TAG, list.toString());
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
     }
 
     /**
@@ -312,8 +336,6 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
     public void stopActiviteit(/*int routeteller_route*/ View v){
-        routeteller_route = routeteller_route + 1;
-
         Navigation.findNavController(v).navigate(R.id.action_tekenMap_to_infoActiviteit);
     }
 }
