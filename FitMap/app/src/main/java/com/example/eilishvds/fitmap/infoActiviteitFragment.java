@@ -210,7 +210,6 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
         Toast toast = Toast.makeText(getContext(), "De route_teller:  " + routeteller_route, Toast.LENGTH_LONG);
         toast.show();
 
-        //ik snap niet waarom het programma deze code overslaat zo kan ik mijn routeteller niet gelijkzetten aan het aantal documents
         db.collection("RouteBeschrijving").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -221,17 +220,21 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                     }
 
                     routeteller_route = list.size();
-                    Toast toast = Toast.makeText(getContext(), "Route: " +routeteller_route, Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getContext(), "Route: " + routeteller_route, Toast.LENGTH_LONG);
                     toast.show();
 
                     Log.d(TAG, list.toString());
+                    HaalDocumentOp();
+
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
         });
+    }
 
-        toast = Toast.makeText(getContext(), "De route_teller:  " + routeteller_route, Toast.LENGTH_LONG);
+    private void HaalDocumentOp() {
+        Toast toast = Toast.makeText(getContext(), "De route_teller:  " + routeteller_route, Toast.LENGTH_LONG);
         toast.show();
 
         DocumentReference docRef = db.collection("RoutePoints").document("Route" + routeteller_route);
@@ -292,7 +295,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
         try {
             map.put("Km", distance);
             map.put("tijd (in minuten)", tussenTijd);
-            map.put("Km/h", 0);
+            map.put("Km per H", 0);
         } catch (Exception e) {
             Toast.makeText(getActivity(), "Exception: " + e,
                     Toast.LENGTH_SHORT).show();
@@ -352,11 +355,12 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
 
                 distance = distance + distance(startLat, startLong, endLat, endLong);
 
-                Context context = getContext();
+                /**Context context = getContext();
                 int duration = Toast.LENGTH_SHORT;
 
                 Toast toast = Toast.makeText(context, "KM: " + distance, duration);
                 toast.show();
+                 */
 
                 line = mMap.addPolyline(new PolylineOptions().clickable(false).add(origin, dest));
             }

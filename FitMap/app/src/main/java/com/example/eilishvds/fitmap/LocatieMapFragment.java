@@ -287,7 +287,7 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
         });
 
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, new LocationListener() {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 0, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 //locationPoints.clear();
@@ -311,13 +311,13 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
 
 
                     GeoPoint geoPoint = new GeoPoint(latlngLocation.latitude, latlngLocation.longitude);
+                    /**
                     Context context = getContext();
                     int duration = Toast.LENGTH_SHORT;
 
                     Toast toast = Toast.makeText(context, geoPoint.toString(), duration);
                     toast.show();
-
-
+                    */
                     mMap.clear();
 
                     map.put("Point" + markerteller, geoPoint);

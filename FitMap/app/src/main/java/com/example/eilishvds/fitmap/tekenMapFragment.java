@@ -196,12 +196,13 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
         }
 
         GeoPoint geoPoint = new GeoPoint(point.latitude, point.longitude);
+        /**
         Context context = this.getContext();
         int duration = Toast.LENGTH_SHORT;
 
         Toast toast = Toast.makeText(context, geoPoint.toString(), duration);
         toast.show();
-
+        */
         map.put("Point" + markerteller, geoPoint);
 
         db.collection("RoutePoints").document("Route" + routeteller_route)

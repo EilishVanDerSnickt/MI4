@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private int routeteller_beschrijving = 0;
     private int routeteller_gegevens = 0;
     private int routeteller_route;
+    private int gebruikerteller = 0;
 
     private Date startTijd;
     private Date stopTijd;
@@ -244,6 +245,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         if (!validateFormRegistreren(naam, email, wachtwoord, wachtwoord2, checked)) {
             return;
         }
+
+        GebruikerToevoegen(naam, email, wachtwoord);
+
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, wachtwoord)
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
@@ -271,6 +275,44 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                 });
         // [END create_user_with_email]//
 
+    }
+
+    private void GebruikerToevoegen(String naam, String email, String wachtwoord) {
+        try{
+            map.put("naam", naam);
+            map.put("emailadres", email);
+            map.put("wachtwoord", wachtwoord);
+        } catch (Exception e){
+            Toast.makeText(this, "Exception: " + e,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        gebruikerteller = gebruikerteller + 1;
+
+        db.collection("Gebruikers").document("Gebruiker" + gebruikerteller)
+                .set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
+                        toast.show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "Error writing document", duration);
+                        toast.show();
+                    }
+                });
     }
 
     public void aanmelden(View v) {
@@ -418,7 +460,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                     }
                 });
         // [END delete_user]
-
     }
 
     private Boolean validateFormWachtwoordWijzigen(String email){
@@ -698,72 +739,12 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
             toast.show();
         } else {
 
-            routeteller_route = berekenRouteTeller();
-
-            Toast toast = Toast.makeText(getApplicationContext(), "De huidige route is: "+ routeteller_route, Toast.LENGTH_SHORT);
-            toast.show();
-
-
-            db.collection("RouteBeschrijving").document("Route" + routeteller_route)
-                    .delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
-
-                            Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
-                            toast.show();
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error deleting document", e);
-                        }
-                    });
-
-            db.collection("RoutePoints").document("Route" + routeteller_route)
-                    .delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
-
-                            Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
-                            toast.show();
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error deleting document", e);
-                        }
-                    });
-
-            db.collection("RouteGegevens").document("Route" + 1)
-                    .delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
-
-                            Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
-                            toast.show();
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error deleting document", e);
-                        }
-                    });
+            berekenRouteTeller();
         }
     }
 
-    private int berekenRouteTeller() {
+    private void berekenRouteTeller() {
+        //deze code wordt overgeslagen -> ik weet niet waarom
         db.collection("RouteBeschrijving").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -778,24 +759,89 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                     toast.show();
 
                     Log.d(TAG, list.toString());
+
+                    VerwijderRoute();
+
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
 
+                    Toast toast = Toast.makeText(getApplicationContext(), "Route teller wordt niet berekend: ", Toast.LENGTH_LONG);
+                    toast.show();
+
                     routeteller_route = 0;
+
                 }
             }
         });
 
-        return routeteller_route;
+    }
+
+    private void VerwijderRoute() {
+        Toast toast = Toast.makeText(getApplicationContext(), "De huidige route is: "+ routeteller_route, Toast.LENGTH_SHORT);
+        toast.show();
+
+
+        db.collection("RouteBeschrijving").document("Route" + routeteller_route)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+
+                        Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
+                        toast.show();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+
+        db.collection("RoutePoints").document("Route" + routeteller_route)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+
+                        Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
+                        toast.show();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+
+        db.collection("RouteGegevens").document("Route" + 1)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+
+                        Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
+                        toast.show();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
     }
 
     public void nieuweActiviteit(View v){
         kijkOfRouteMoetWordenOpgeslagen();
 
         infoActiviteit.nieuweActiviteit(v);
-    }
-
-    public void isOpslaanChecked(View v) {
-
     }
 }

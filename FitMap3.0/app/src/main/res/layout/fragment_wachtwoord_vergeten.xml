@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".wachtwoordVergetenFragment">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wachtwoord Vergeten"
+            android:textSize="25dp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            android:textColor="#424242"
+            android:id="@+id/text_wachtwoordTitel"/>
+
+        <TextView
+            android:text="Emailadres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_wachtwoordVergeten_emailadres"
+            android:textSize="16dp"
+            android:textColor="#6E6E6E"
+            app:layout_constraintTop_toBottomOf="@id/text_wachtwoordTitel"
+            android:layout_marginTop="32dp"
+            android:layout_marginLeft="5dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/edit_wachtwoordVergeten_emailadres"
+            app:layout_constraintTop_toBottomOf="@id/text_wachtwoordVergeten_emailadres"
+            android:layout_marginLeft="5dp"/>
+
+        <Button
+            android:text="Ga verder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_wachtwoordVergeten"
+            android:onClick="wachtwoordVergeten"
+            app:layout_constraintTop_toBottomOf="@+id/edit_wachtwoordVergeten_emailadres"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#01DFA5"
+            android:textColor="#FFFFFF"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Annuleer"
+            android:textAlignment="center"
+            android:textColor="#0174DF"
+            android:id="@+id/text_annuleer"
+            app:layout_constraintTop_toBottomOf="@+id/btn_wachtwoordVergeten"
+            android:textSize="10dp"
+            android:onClick="annuleerWachtwoordVergeten"
+            android:layout_marginTop="16dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>
