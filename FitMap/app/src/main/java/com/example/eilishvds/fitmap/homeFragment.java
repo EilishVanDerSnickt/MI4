@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -63,6 +65,8 @@ public class homeFragment extends Fragment {
     private CardView cardView;
 
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     public homeFragment() {
         // Required empty public constructor
@@ -102,7 +106,10 @@ public class homeFragment extends Fragment {
 
         getActivity().getWindow().setLayout((int) (width), (int)(height));
 
+        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        user = mAuth.getCurrentUser();
     }
 
     @Override
@@ -123,7 +130,7 @@ public class homeFragment extends Fragment {
     }
 
     private void addTextViews() {
-        db.collection("RouteBeschrijving")
+        db.collection("RouteBeschrijving").whereEqualTo("UID", user.getUid())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -165,7 +172,7 @@ public class homeFragment extends Fragment {
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             int i = 1;
             for (String s : list) {
-                if (i % 2 == 1) {
+                if (i % 2 == 0) {
                     String value = document.getString("titel");
                     cardView = new CardView(getContext());
                     this.linearLayout.addView(cardView);
@@ -174,9 +181,9 @@ public class homeFragment extends Fragment {
                     textView.setText(value);
                     textView.setLinksClickable(true);
                     cardView.addView(textView);
-
                 }
-                i = i + i;
+
+                i = i + 1;
             }
         }catch (Exception e){
             Context context = getContext();

@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -32,6 +34,8 @@ public class viewPager_tab2 extends Fragment {
     private TextView textView3;
 
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     public viewPager_tab2(){
         //constructor
@@ -41,7 +45,10 @@ public class viewPager_tab2 extends Fragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        user = mAuth.getCurrentUser();
     }
 
     @Override
@@ -54,7 +61,7 @@ public class viewPager_tab2 extends Fragment {
     }
 
     private void VultextView() {
-        db.collection("RouteGegevens")
+        db.collection("RouteGegevens").whereEqualTo("UID", user.getUid())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

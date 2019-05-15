@@ -25,10 +25,14 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +50,8 @@ public class viewPager_tab3 extends Fragment implements OnMapReadyCallback {
     private float zoomlevel = 10f;
 
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     public viewPager_tab3(){
         //constructor
@@ -55,7 +61,9 @@ public class viewPager_tab3 extends Fragment implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        user = mAuth.getCurrentUser();
     }
 
     @Override
@@ -114,7 +122,43 @@ public class viewPager_tab3 extends Fragment implements OnMapReadyCallback {
             mMap.getCameraPosition();
         }
 
-        DocumentReference docRef = db.collection("RoutePoints").document("Route" + 1);
+        db.collection("RouteBeschrijving").whereEqualTo("UID", user.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int i = 0;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                List<String> list = new ArrayList<>();
+                                Map<String, Object> map = document.getData();
+
+                                if (map != null){
+                                    for (Map.Entry<String, Object> entry : map.entrySet()){
+                                        list.add(entry.getValue().toString());
+                                    }
+                                }
+
+                                i = i + 1;
+                            }
+                            ToonJuisteRoute(i);
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            Context context = getContext();
+                            int duration = Toast.LENGTH_SHORT;
+
+                            Toast toast = Toast.makeText(context, "Error getting documents: " + task.getException(), duration);
+                            toast.show();
+                        }
+                    }
+                });
+    }
+
+    private void ToonJuisteRoute(int size) {
+        Toast toast = Toast.makeText(getContext(), "Grootte van de array: " + size, Toast.LENGTH_SHORT);
+        toast.show();
+        DocumentReference docRef = db.collection("RoutePoints").document("Route" + size);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -159,6 +203,7 @@ public class viewPager_tab3 extends Fragment implements OnMapReadyCallback {
             }
         });
         // [END get_document]
+
     }
 
     private void tekenMarker(DocumentSnapshot document, List<String> list) {

@@ -29,6 +29,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -74,6 +76,8 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
 
     private FirebaseFirestore db;
     private Map<String, Object> map;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     private int routeteller_route = 1;
 
@@ -121,8 +125,11 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         map = new HashMap<>();
+
+        user = mAuth.getCurrentUser();
     }
 
     @Override
@@ -293,6 +300,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
 
     public void schrijfGegevensweg(double distance) {
         try {
+            map.put("UID", user.getUid());
             map.put("Km", distance);
             map.put("tijd (in minuten)", tussenTijd);
             map.put("Km per H", 0);
@@ -334,6 +342,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
         int i = 1;
         try {
             for (String s : list) {
+
                 GeoPoint punt1 = document.getGeoPoint("Point" + i);
 
                 i = i + 1;

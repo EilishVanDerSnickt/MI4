@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private int routeteller_beschrijving = 0;
     private int routeteller_gegevens = 0;
     private int routeteller_route;
+    private int gebruikerteller = 0;
 
     private Date startTijd;
     private Date stopTijd;
@@ -244,6 +245,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         if (!validateFormRegistreren(naam, email, wachtwoord, wachtwoord2, checked)) {
             return;
         }
+
+        GebruikerToevoegen(naam, email, wachtwoord);
+
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, wachtwoord)
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
@@ -271,6 +275,44 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                 });
         // [END create_user_with_email]//
 
+    }
+
+    private void GebruikerToevoegen(String naam, String email, String wachtwoord) {
+        try{
+            map.put("naam", naam);
+            map.put("emailadres", email);
+            map.put("wachtwoord", wachtwoord);
+        } catch (Exception e){
+            Toast.makeText(this, "Exception: " + e,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        gebruikerteller = gebruikerteller + 1;
+
+        db.collection("Gebruikers").document("Gebruiker" + gebruikerteller)
+                .set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
+                        toast.show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "Error writing document", duration);
+                        toast.show();
+                    }
+                });
     }
 
     public void aanmelden(View v) {
@@ -536,7 +578,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         }
 
         try{
-            map.put("UID", user.getUid());
             map.put("titel", titel);
             map.put("beschrijving", beschrijving);
         } catch (Exception e){
@@ -612,7 +653,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         }
 
         try{
-            map.put("UID", user.getUid());
             map.put("titel", titel);
             map.put("beschrijving", beschrijving);
         } catch (Exception e){
@@ -705,7 +745,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     private void berekenRouteTeller() {
         //deze code wordt overgeslagen -> ik weet niet waarom
-        db.collection("RouteBeschrijving").whereEqualTo("UID", user.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("RouteBeschrijving").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {

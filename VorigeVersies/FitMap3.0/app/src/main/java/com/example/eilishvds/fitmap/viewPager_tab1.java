@@ -5,17 +5,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -26,34 +26,29 @@ import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
-public class viewPager_tab2 extends Fragment {
+public class viewPager_tab1 extends Fragment {
 
     private View rootview;
     private TextView textView1;
     private TextView textView2;
-    private TextView textView3;
-
+    
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
-    private FirebaseUser user;
 
-    public viewPager_tab2(){
+    public viewPager_tab1(){
         //constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
+        
         super.onCreate(savedInstanceState);
 
-        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
-        user = mAuth.getCurrentUser();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        rootview =  inflater.inflate(R.layout.viewpager_tab2, container, false);
+        rootview =  inflater.inflate(R.layout.viewpager_tab1, container, false);
 
         VultextView();
 
@@ -61,7 +56,7 @@ public class viewPager_tab2 extends Fragment {
     }
 
     private void VultextView() {
-        db.collection("RouteGegevens").whereEqualTo("UID", user.getUid())
+        db.collection("RouteBeschrijving")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -77,8 +72,8 @@ public class viewPager_tab2 extends Fragment {
                                         list.add(entry.getValue().toString());
                                     }
                                 }
-
-                                toonInTextView(document, list, textView1, textView2, textView3);
+                                
+                                toonInTextView(document, list, textView1, textView2);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -93,36 +88,20 @@ public class viewPager_tab2 extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void toonInTextView(QueryDocumentSnapshot document, List<String> list, TextView textView1, TextView textView2, TextView textView3) {
+    private void toonInTextView(QueryDocumentSnapshot document, List<String> list, TextView textView1, TextView textView2) {
         try {
-            textView1 = rootview.findViewById(R.id.tab_2_km);
-            textView2 = rootview.findViewById(R.id.tab_2_kmH);
-            textView3 = rootview.findViewById(R.id.tab_2_tijd);
-            double value;
+            textView1 = rootview.findViewById(R.id.tab_1_titel);
+            textView2 = rootview.findViewById(R.id.tab_1_beschrijving);
             int i = 1;
-
-            Context context = getContext();
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, "Aantal in lijst: " + list.size(), duration);
-            toast.show();
             for (String s : list) {
-               switch (i){
-                   case 1:
-                       value = document.getDouble("Km");
-                       textView1.setText("KM: " + value);
-                       break;
-                   case 2:
-                       value = document.getDouble("Km per H");
-                       textView2.setText("KM / H: " + value);
-                       break;
-                   case 3:
-                       value = document.getDouble("tijd (in minuten)");
-                       textView3.setText("Tijd (in minuten): " + value);
-                       break;
-                   default:
-                       break;
-               }
+                if (i % 2 == 1) {
+                    String value = document.getString("titel");
+                    textView1.setText("Titel: " + value);
+
+                } else {
+                    String value = document.getString("beschrijving");
+                    textView2.setText("Beschrijving: " + value);
+                }
                 i = i + 1;
             }
         }catch (Exception e){

@@ -32,6 +32,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -80,6 +82,9 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
     private int markerteller = 0;
     private int routeteller_route;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+
     public tekenMapFragment() {
         // Required empty public constructor
     }
@@ -118,9 +123,12 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
 
         getActivity().getWindow().setLayout((int) (width), (int) (height));
 
+        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
         map = new HashMap<>();
+
+        user = mAuth.getCurrentUser();
     }
 
     @Override
@@ -296,7 +304,7 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(plaats, zoomlevel));
 
-        db.collection("RouteBeschrijving").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("RouteBeschrijving").whereEqualTo("UID", user.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -304,10 +312,9 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         list.add(document.getId());
                     }
-
                     routeteller_route = list.size();
-                    Toast toast = Toast.makeText(getContext(), "Route: " +routeteller_route, Toast.LENGTH_LONG);
-                    toast.show();
+                    /*Toast toast = Toast.makeText(getContext(), "Route: " + routeteller_route, Toast.LENGTH_LONG);
+                    toast.show();*/
 
                     Log.d(TAG, list.toString());
                 } else {

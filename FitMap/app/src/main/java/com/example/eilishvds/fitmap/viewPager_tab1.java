@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -33,6 +35,8 @@ public class viewPager_tab1 extends Fragment {
     private TextView textView2;
     
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     public viewPager_tab1(){
         //constructor
@@ -43,7 +47,10 @@ public class viewPager_tab1 extends Fragment {
         
         super.onCreate(savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        user = mAuth.getCurrentUser();
     }
 
     @Override
@@ -56,7 +63,7 @@ public class viewPager_tab1 extends Fragment {
     }
 
     private void VultextView() {
-        db.collection("RouteBeschrijving")
+        db.collection("RouteBeschrijving").whereEqualTo("UID", user.getUid())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -94,11 +101,11 @@ public class viewPager_tab1 extends Fragment {
             textView2 = rootview.findViewById(R.id.tab_1_beschrijving);
             int i = 1;
             for (String s : list) {
-                if (i % 2 == 1) {
+                if (i == 1) {
                     String value = document.getString("titel");
                     textView1.setText("Titel: " + value);
 
-                } else {
+                } else if (i == 2) {
                     String value = document.getString("beschrijving");
                     textView2.setText("Beschrijving: " + value);
                 }
