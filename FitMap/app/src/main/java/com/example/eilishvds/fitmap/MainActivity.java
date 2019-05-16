@@ -56,7 +56,7 @@ import androidx.navigation.Navigation;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener, popupFragment.OnFragmentInteractionListener, LocatieMapFragment.OnFragmentInteractionListener, annuleerActiviteitFragment.OnFragmentInteractionListener, tekenMapFragment.OnFragmentInteractionListener, annuleerActiviteitTekenFragment.OnFragmentInteractionListener, infoActiviteitFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener, popupFragment.OnFragmentInteractionListener, LocatieMapFragment.OnFragmentInteractionListener, annuleerActiviteitFragment.OnFragmentInteractionListener, tekenMapFragment.OnFragmentInteractionListener, annuleerActiviteitTekenFragment.OnFragmentInteractionListener, infoActiviteitFragment.OnFragmentInteractionListener, GewichtFragment.OnFragmentInteractionListener{
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private tekenMapFragment tekenMap = new tekenMapFragment();
     private annuleerActiviteitTekenFragment annuleerTekenActiviteit = new annuleerActiviteitTekenFragment();
     private infoActiviteitFragment infoActiviteit = new infoActiviteitFragment();
+    private GewichtFragment gewicht = new GewichtFragment();
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -803,5 +804,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         kijkOfRouteMoetWordenOpgeslagen();
 
         infoActiviteit.nieuweActiviteit(v);
+    }
+
+    public void GewichtInstellen(View v){
+        instellingen.gewichtInstellen(v);
     }
 }
