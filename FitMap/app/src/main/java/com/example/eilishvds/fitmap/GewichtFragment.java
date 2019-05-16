@@ -1,12 +1,37 @@
 package com.example.eilishvds.fitmap;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.common.base.Converter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import androidx.navigation.Navigation;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -26,6 +51,12 @@ public class GewichtFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private TextView textView;
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private FirebaseUser user;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,13 +89,48 @@ public class GewichtFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        user = mAuth.getCurrentUser();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gewicht, container, false);
+        View rootview = inflater.inflate(R.layout.fragment_gewicht, container, false);
+        textView = (TextView) rootview.findViewById(R.id.edit_gewichtInstellen_gewicht);
+
+        CheckGewichtReedsBestaat();
+
+        return rootview;
+    }
+
+    private void CheckGewichtReedsBestaat() {
+        DocumentReference docRef = db.collection("GebruikersInfo").document(user.getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    assert document != null;
+                    if (document.exists()) {
+                        Double huidigGewicht = document.getDouble("Gewicht");
+
+                        assert huidigGewicht != null;
+                        textView.setText(huidigGewicht.toString());
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -104,5 +170,9 @@ public class GewichtFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void AnnuleerGewichtWijzigen(View v){
+        Navigation.findNavController(v).navigate(R.id.action_gewicht_to_instellingen);
     }
 }

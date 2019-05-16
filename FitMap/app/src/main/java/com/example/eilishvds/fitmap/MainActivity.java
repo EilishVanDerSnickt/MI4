@@ -1,5 +1,6 @@
 package com.example.eilishvds.fitmap;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -44,6 +45,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.okhttp.Route;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -808,5 +810,92 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     public void GewichtInstellen(View v){
         instellingen.gewichtInstellen(v);
+    }
+
+    public void annuleerGewichtInstellen(View v){
+        gewicht.AnnuleerGewichtWijzigen(v);
+    }
+
+    public void GewichtAanpassen(View v){
+        DocumentReference docRef = db.collection("GebruikersInfo").document(user.getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    assert document != null;
+
+                    edittext1 = (EditText) findViewById(R.id.edit_gewichtInstellen_gewicht);
+                    String huidgGewicht = textview.getText().toString();
+                    if (document.exists()) {
+                        //UpdateDocument(huidgGewicht);
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        //MaakNieuwDocumentAan(huidgGewicht);
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void MaakNieuwDocumentAan(String huidgGewicht) {
+        try{
+            map.put("UID", user.getUid());
+            map.put("Gewicht", huidgGewicht);
+        } catch (Exception e){
+            Toast.makeText(MainActivity.this, "Exception: " + e,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        db.collection("GebruikersInfo").document(user.getUid())
+                .set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
+                        toast.show();
+
+                        Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_gewicht_to_instellingen);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "Error writing document", duration);
+                        toast.show();
+                    }
+                });
+    }
+
+    private void UpdateDocument(String gewich) {
+        DocumentReference updateRef = db.collection("GebruikersInfo").document(user.getUid());
+
+        // Set the "isCapital" field of the city 'DC'
+        updateRef
+                .update("Gewicht", gewich)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
     }
 }
