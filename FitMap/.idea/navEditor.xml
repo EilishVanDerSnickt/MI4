@@ -121,6 +121,15 @@
                             <option name="y" value="140" />
                           </Point>
                         </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_gewicht_to_instellingen">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -292,6 +301,11 @@
                         <option name="myPositions">
                           <map>
                             <entry key="action_instellingen_to_emailWijzigen">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_instellingen_to_gewicht">
                               <value>
                                 <LayoutPositions />
                               </value>

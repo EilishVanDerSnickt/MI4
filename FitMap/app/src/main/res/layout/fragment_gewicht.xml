@@ -23,13 +23,31 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
-            android:text="Gewicht"
+            android:text="Huidig gewicht"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/text_gewicht"
+            android:id="@+id/text_huidigGewicht"
             android:textSize="16dp"
             android:textColor="#6E6E6E"
             app:layout_constraintTop_toBottomOf="@id/text_GewichtInstellen"
+            android:layout_marginTop="32dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:textSize="16dp"
+            android:id="@+id/text_gewichtInstellen_huidigGewicht"
+            app:layout_constraintTop_toBottomOf="@id/text_huidigGewicht"/>
+
+
+        <TextView
+            android:text="Nieuw gewicht"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_nieuwGewicht"
+            android:textSize="16dp"
+            android:textColor="#6E6E6E"
+            app:layout_constraintTop_toBottomOf="@id/text_gewichtInstellen_huidigGewicht"
             android:layout_marginTop="32dp"/>
 
         <EditText
@@ -38,7 +56,7 @@
             android:inputType="numberDecimal"
             android:ems="10"
             android:id="@+id/edit_gewichtInstellen_gewicht"
-            app:layout_constraintTop_toBottomOf="@id/text_gewicht"/>
+            app:layout_constraintTop_toBottomOf="@id/text_nieuwGewicht"/>
 
         <Button
             android:text="Gewicht aanpassen"

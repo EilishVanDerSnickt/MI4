@@ -32,6 +32,7 @@ public class viewPager_tab2 extends Fragment {
     private TextView textView1;
     private TextView textView2;
     private TextView textView3;
+    private TextView textView4;
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
@@ -78,7 +79,7 @@ public class viewPager_tab2 extends Fragment {
                                     }
                                 }
 
-                                toonInTextView(document, list, textView1, textView2, textView3);
+                                toonInTextView(document, list, textView1, textView2, textView3, textView4);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -93,11 +94,12 @@ public class viewPager_tab2 extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void toonInTextView(QueryDocumentSnapshot document, List<String> list, TextView textView1, TextView textView2, TextView textView3) {
+    private void toonInTextView(QueryDocumentSnapshot document, List<String> list, TextView textView1, TextView textView2, TextView textView3, TextView textView4) {
         try {
             textView1 = rootview.findViewById(R.id.tab_2_km);
             textView2 = rootview.findViewById(R.id.tab_2_kmH);
             textView3 = rootview.findViewById(R.id.tab_2_tijd);
+            textView4 = rootview.findViewById(R.id.tab_2_calH);
             double value;
             int i = 1;
 
@@ -119,6 +121,10 @@ public class viewPager_tab2 extends Fragment {
                    case 3:
                        value = document.getDouble("tijd (in minuten)");
                        textView3.setText("Tijd (in minuten): " + value);
+                       break;
+                   case 4:
+                       value = document.getDouble("Cal per H");
+                       textView4.setText("Caloriën / H: " + value);
                        break;
                    default:
                        break;

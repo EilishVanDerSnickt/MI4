@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -87,6 +88,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     private double endLat;
     private double endLong;
     private double distance = 1;
+    private double cal;
 
     private Polyline line;
     private float zoomlevel = 10f;
@@ -130,6 +132,8 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
         map = new HashMap<>();
 
         user = mAuth.getCurrentUser();
+
+        cal = BerekenCal();
     }
 
     @Override
@@ -232,7 +236,6 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
 
                     Log.d(TAG, list.toString());
                     HaalDocumentOp();
-
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
@@ -268,7 +271,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                         toast.show();
 
                         distance = tekenMarker(document, list);
-                        schrijfGegevensweg(distance);
+                        schrijfGegevensweg(distance, cal);
                     } else {
                         Log.d(TAG, "No such document");
                         Context context = getContext();
@@ -280,7 +283,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                         LatLng plaats = new LatLng(50, 4);
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
 
-                        schrijfGegevensweg(tussenTijd);
+                        schrijfGegevensweg(tussenTijd, cal);
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
@@ -298,12 +301,39 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
         // [END get_document]
     }
 
-    public void schrijfGegevensweg(double distance) {
+    private double BerekenCal() {
+        DocumentReference docRef = db.collection("GebruikersInfo").document(user.getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task2) {
+                if (task2.isSuccessful()) {
+                    DocumentSnapshot document = task2.getResult();
+                    assert document != null;
+                    if (document.exists()) {
+                        String gewicht = document.getString("Gewicht");
+                        assert gewicht != null;
+                        Double doubleGewicht = Double.parseDouble(gewicht);
+
+                        cal = doubleGewicht * 8;
+                    } else {
+                        cal = 0;
+                    }
+                } else {
+                    cal = 0;
+                }
+            }
+        });
+
+        return cal;
+    }
+
+    public void schrijfGegevensweg(double distance, double cal) {
         try {
             map.put("UID", user.getUid());
             map.put("Km", distance);
             map.put("tijd (in minuten)", tussenTijd);
             map.put("Km per H", 0);
+            map.put("Cal per H", cal);
         } catch (Exception e) {
             Toast.makeText(getActivity(), "Exception: " + e,
                     Toast.LENGTH_SHORT).show();

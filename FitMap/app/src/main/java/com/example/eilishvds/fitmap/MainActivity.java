@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private FirebaseUser user;
     private FirebaseFirestore db;
     private Map<String, Object> map;
+    private Map<String, Object> map2;
 
     private int routeteller_beschrijving = 0;
     private int routeteller_gegevens = 0;
@@ -152,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         db = FirebaseFirestore.getInstance();
 
         map = new HashMap<>();
+        map2 = new HashMap<>();
     }
 
     @Override
@@ -817,26 +819,42 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
 
     public void GewichtAanpassen(View v){
-        DocumentReference docRef = db.collection("GebruikersInfo").document(user.getUid());
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @SuppressLint("SetTextI18n")
+        //gewicht.SchrijfGewichtWeg(v);
+        DocumentReference docRef2 = db.collection("GebruikersInfo").document(user.getUid());
+        docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    assert document != null;
+            public void onComplete(@NonNull Task<DocumentSnapshot> task2) {
+                if (task2.isSuccessful()) {
+                    DocumentSnapshot document2 = task2.getResult();
+                    assert document2 != null;
 
                     edittext1 = (EditText) findViewById(R.id.edit_gewichtInstellen_gewicht);
-                    String huidgGewicht = textview.getText().toString();
-                    if (document.exists()) {
-                        //UpdateDocument(huidgGewicht);
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    String huidgGewicht = edittext1.getText().toString();
+                    if (document2.exists()) {
+
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "het document bestaat", duration);
+                        toast.show();
+                        Log.d(TAG, "DocumentSnapshot data: " + document2.getData());
+                        UpdateDocument(huidgGewicht);
                     } else {
-                        //MaakNieuwDocumentAan(huidgGewicht);
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "het lukt", duration);
+                        toast.show();
                         Log.d(TAG, "No such document");
+                        MaakNieuwDocumentAan(huidgGewicht);
                     }
                 } else {
-                    Log.d(TAG, "get failed with ", task.getException());
+                    Context context = getApplicationContext();
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, "Kan niet verbinden", duration);
+                    toast.show();
+                    Log.d(TAG, "get failed with ", task2.getException());
                 }
             }
         });
@@ -844,15 +862,15 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     private void MaakNieuwDocumentAan(String huidgGewicht) {
         try{
-            map.put("UID", user.getUid());
-            map.put("Gewicht", huidgGewicht);
+            map2.put("UID", user.getUid());
+            map2.put("Gewicht", huidgGewicht);
         } catch (Exception e){
             Toast.makeText(MainActivity.this, "Exception: " + e,
                     Toast.LENGTH_SHORT).show();
         }
 
         db.collection("GebruikersInfo").document(user.getUid())
-                .set(map)
+                .set(map2)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -882,13 +900,13 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private void UpdateDocument(String gewich) {
         DocumentReference updateRef = db.collection("GebruikersInfo").document(user.getUid());
 
-        // Set the "isCapital" field of the city 'DC'
         updateRef
                 .update("Gewicht", gewich)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully updated!");
+                        Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_gewicht_to_instellingen);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

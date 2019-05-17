@@ -10,10 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.base.Converter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,6 +56,11 @@ public class GewichtFragment extends Fragment {
     private String mParam2;
 
     private TextView textView;
+    private View rootview;
+    private EditText editText;
+
+    private Boolean bestaat;
+    private String huidigGewicht;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -99,8 +107,9 @@ public class GewichtFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootview = inflater.inflate(R.layout.fragment_gewicht, container, false);
-        textView = (TextView) rootview.findViewById(R.id.edit_gewichtInstellen_gewicht);
+        rootview = inflater.inflate(R.layout.fragment_gewicht, container, false);
+        editText = (EditText) rootview.findViewById(R.id.edit_gewichtInstellen_gewicht);
+        textView = (TextView) rootview.findViewById(R.id.text_gewichtInstellen_huidigGewicht);
 
         CheckGewichtReedsBestaat();
 
@@ -112,25 +121,34 @@ public class GewichtFragment extends Fragment {
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    assert document != null;
-                    if (document.exists()) {
-                        Double huidigGewicht = document.getDouble("Gewicht");
-
+            public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+                if (task1.isSuccessful()) {
+                    DocumentSnapshot document1 = task1.getResult();
+                    assert document1 != null;
+                    if (document1.exists()) {
+                        huidigGewicht = document1.getString("Gewicht");
                         assert huidigGewicht != null;
-                        textView.setText(huidigGewicht.toString());
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        textView.setText(huidigGewicht);
+                        Log.d(TAG, "DocumentSnapshot data: " + document1.getData());
                     } else {
-
                         Log.d(TAG, "No such document");
                     }
                 } else {
-                    Log.d(TAG, "get failed with ", task.getException());
+                    Log.d(TAG, "get failed with ", task1.getException());
                 }
             }
         });
+    }
+
+    public void SchrijfGewichtWeg(View v){
+        editText = (EditText) rootview.findViewById(R.id.edit_gewichtInstellen_gewicht);
+        String huidgGewicht = textView.getText().toString();
+        if (bestaat){
+
+        } else {
+            Navigation.findNavController(v).navigate(R.id.action_gewicht_to_instellingen);
+        }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
