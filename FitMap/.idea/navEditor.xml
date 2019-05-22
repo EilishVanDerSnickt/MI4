@@ -268,6 +268,27 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="regioFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="3826" />
+                            <option name="y" value="1940" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_regio_to_instellingen">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="registrerenFragment">
                     <value>
                       <LayoutPositions>
@@ -321,6 +342,11 @@
                               </value>
                             </entry>
                             <entry key="action_instellingen_to_popup">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_instellingen_to_regio">
                               <value>
                                 <LayoutPositions />
                               </value>

@@ -21,6 +21,7 @@ import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +59,7 @@ import androidx.navigation.Navigation;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener, popupFragment.OnFragmentInteractionListener, LocatieMapFragment.OnFragmentInteractionListener, annuleerActiviteitFragment.OnFragmentInteractionListener, tekenMapFragment.OnFragmentInteractionListener, annuleerActiviteitTekenFragment.OnFragmentInteractionListener, infoActiviteitFragment.OnFragmentInteractionListener, GewichtFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener, registrerenFragment.OnFragmentInteractionListener, wachtwoordVergetenFragment.OnFragmentInteractionListener, homeFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener, aanmakenActiviteit.OnFragmentInteractionListener, emailWijzigenFragment.OnFragmentInteractionListener, wachtwoordWijzigenFragment.OnFragmentInteractionListener, popupFragment.OnFragmentInteractionListener, LocatieMapFragment.OnFragmentInteractionListener, annuleerActiviteitFragment.OnFragmentInteractionListener, tekenMapFragment.OnFragmentInteractionListener, annuleerActiviteitTekenFragment.OnFragmentInteractionListener, infoActiviteitFragment.OnFragmentInteractionListener, GewichtFragment.OnFragmentInteractionListener, RegioFragment.OnFragmentInteractionListener{
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private TextView textview;
     private ScrollView scrollView;
     private CardView cardView;
+    private Spinner spinner;
 
     private homeFragment home = new homeFragment();
     private LoginFragment login = new LoginFragment();
@@ -87,12 +89,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private annuleerActiviteitTekenFragment annuleerTekenActiviteit = new annuleerActiviteitTekenFragment();
     private infoActiviteitFragment infoActiviteit = new infoActiviteitFragment();
     private GewichtFragment gewicht = new GewichtFragment();
+    private RegioFragment regio = new RegioFragment();
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private FirebaseFirestore db;
     private Map<String, Object> map;
     private Map<String, Object> map2;
+    private Map<String, Object> map3;
 
     private int routeteller_beschrijving = 0;
     private int routeteller_gegevens = 0;
@@ -154,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
         map = new HashMap<>();
         map2 = new HashMap<>();
+        map3 = new HashMap<>();
     }
 
     @Override
@@ -522,6 +527,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         locatieMap.annuleer(v);
     }
     public void bevestingAnnulatieLocatie(View v){
+        berekenRouteTeller();
         annuleerActiviteit.bevesting(v);
     }
 
@@ -655,6 +661,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
 
     public void bevestingAnnulatieTeken(View v){
+        berekenRouteTeller();
         annuleerTekenActiviteit.bevesting(v);
     }
 
@@ -784,7 +791,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                     }
                 });
 
-        db.collection("RouteGegevens").document("Route" + 1)
+        db.collection("RouteGegevens").document("Route" + routeteller_route)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -907,6 +914,113 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully updated!");
                         Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_gewicht_to_instellingen);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+    }
+
+    public void RegioInstellen(View v){
+        instellingen.regioInstellen(v);
+    }
+
+    public void annuleerRegioInstellen(View v){
+        regio.AnnuleerRegioWijzigen(v);
+    }
+
+    public void RegioAanpassen(View v){
+        DocumentReference docRef3 = db.collection("GebruikersInfo").document(user.getUid());
+        docRef3.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task3) {
+                if (task3.isSuccessful()) {
+                    DocumentSnapshot document3 = task3.getResult();
+                    assert document3 != null;
+
+                    spinner = (Spinner) findViewById(R.id.spinner_regioInstellen_gewicht);
+
+                    String huidigeRegio = spinner.getSelectedItem().toString();
+
+                    if (document3.exists()) {
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "het document bestaat", duration);
+                        toast.show();
+                        Log.d(TAG, "DocumentSnapshot data: " + document3.getData());
+                        UpdateDocumentRegio(huidigeRegio);
+                    } else {
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "het lukt", duration);
+                        toast.show();
+                        Log.d(TAG, "No such document");
+                        MaakNieuwDocumentAanRegio(huidigeRegio);
+                    }
+                } else {
+                    Context context = getApplicationContext();
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, "Kan niet verbinden", duration);
+                    toast.show();
+                    Log.d(TAG, "get failed with ", task3.getException());
+                }
+            }
+        });
+    }
+
+    private void MaakNieuwDocumentAanRegio(String huidigeRegio) {
+        try{
+            map3.put("UID", user.getUid());
+            map3.put("Regio", huidigeRegio);
+        } catch (Exception e){
+            Toast.makeText(MainActivity.this, "Exception: " + e,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        db.collection("GebruikersInfo").document(user.getUid())
+                .set(map3)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
+                        toast.show();
+
+                        Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_regio_to_instellingen);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, "Error writing document", duration);
+                        toast.show();
+                    }
+                });
+    }
+
+    private void UpdateDocumentRegio(String huidigeRegio) {
+        DocumentReference updateRef = db.collection("GebruikersInfo").document(user.getUid());
+
+        updateRef
+                .update("Regio", huidigeRegio)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                        Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_regio_to_instellingen);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

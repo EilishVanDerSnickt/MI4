@@ -1,6 +1,7 @@
 package com.example.eilishvds.fitmap;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -34,6 +35,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -75,7 +77,7 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
     private static final int MY_REQUEST_INT = 117;
     private ArrayList markerPoints = new ArrayList();
     private Polyline line;
-    private final float zoomlevel = 15f;
+    private final float zoomlevel = 10f;
 
     private FirebaseFirestore db;
     private Map<String, Object> map;
@@ -84,6 +86,9 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+
+    private String regio;
+    private LatLng plaats;
 
     public tekenMapFragment() {
         // Required empty public constructor
@@ -300,9 +305,81 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
         mMap.setOnMapClickListener(this);
         mMap.setOnPolylineClickListener(this);
 
-        LatLng plaats = new LatLng(50, 4);
+        CheckRegioBestaat();
+
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
+    }
+
+    private void CheckRegioBestaat() {
+        DocumentReference docRef = db.collection("GebruikersInfo").document(user.getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+                if (task1.isSuccessful()) {
+                    DocumentSnapshot document1 = task1.getResult();
+                    assert document1 != null;
+                    if (document1.exists()) {
+                        regio = document1.getString("Regio");
+                        Log.d(TAG, "DocumentSnapshot data: " + document1.getData());
+
+                        BepaalCoordinaten(regio);
+                    } else {
+                        Log.d(TAG, "No such document");
+
+                        regio = null;
+
+                        BepaalCoordinaten(regio);
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task1.getException());
+
+                    regio = null;
+
+                    BepaalCoordinaten(regio);
+                }
+            }
+        });
+    }
+
+    private void BepaalCoordinaten(String regio) {
+        if (regio != null){
+            switch (regio){
+                case "Antwerpen":
+                    plaats = new LatLng(51.2, 4.4);
+                    break;
+                case "Brussel":
+                    plaats = new LatLng(50.8, 4.3);
+                    break;
+                case "Limburg":
+                    plaats = new LatLng(50.5, 5.9);
+                    break;
+                case "Oost-Vlaanderen":
+                    plaats = new LatLng(51.0, 3.6);
+                    break;
+                case "Vlaams-Brabant":
+                    plaats = new LatLng(50.9, 4.5);
+                    break;
+                case "West-Vlaanderen":
+                    plaats = new LatLng(51.0, 3.1);
+                    break;
+                case "":
+                    plaats = new LatLng(50.5, 4.0);
+                    break;
+                default:
+                    plaats = new LatLng(50.5, 4.0);
+                    break;
+            }
+        } else{
+            plaats = new LatLng(50.5, 4.0);
+        }
+
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(plaats, zoomlevel));
+
+        BepaalRouteNaam();
+    }
+
+    private void BepaalRouteNaam() {
 
         db.collection("RouteBeschrijving").whereEqualTo("UID", user.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -313,8 +390,6 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
                         list.add(document.getId());
                     }
                     routeteller_route = list.size();
-                    /*Toast toast = Toast.makeText(getContext(), "Route: " + routeteller_route, Toast.LENGTH_LONG);
-                    toast.show();*/
 
                     Log.d(TAG, list.toString());
                 } else {

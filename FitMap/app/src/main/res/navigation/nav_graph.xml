@@ -51,6 +51,7 @@
         <action android:id="@+id/action_instellingen_to_popup" app:destination="@+id/popupFragment"/>
         <action android:id="@+id/action_instellingen_to_login" app:destination="@+id/loginFragment"/>
         <action android:id="@+id/action_instellingen_to_gewicht" app:destination="@+id/gewichtFragment"/>
+        <action android:id="@+id/action_instellingen_to_regio" app:destination="@+id/regioFragment"/>
     </fragment>
 
     <fragment
@@ -139,6 +140,13 @@
         android:label="fragment_gewicht"
         tools:layout="@layout/fragment_gewicht">
         <action android:id="@+id/action_gewicht_to_instellingen" app:destination="@+id/settingsFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/regioFragment"
+        android:name="com.example.eilishvds.fitmap.RegioFragment"
+        android:label="fragment_regio"
+        tools:layout="@layout/fragment_regio">
+        <action android:id="@+id/action_regio_to_instellingen" app:destination="@+id/settingsFragment"/>
     </fragment>
 
 </navigation>

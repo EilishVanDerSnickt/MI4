@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".RegioFragment">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:text="Regio instellen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_RegioInstellen"
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:textColor="#424242"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:text="Huidige regio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_huidigeRegio"
+            android:textSize="16dp"
+            android:textColor="#6E6E6E"
+            app:layout_constraintTop_toBottomOf="@id/text_RegioInstellen"
+            android:layout_marginTop="32dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:textSize="16dp"
+            android:id="@+id/text_regioInstellen_huidigeRegio"
+            app:layout_constraintTop_toBottomOf="@id/text_huidigeRegio"/>
+
+
+        <TextView
+            android:text="Nieuwe regio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_nieuweRegio"
+            android:textSize="16dp"
+            android:textColor="#6E6E6E"
+            app:layout_constraintTop_toBottomOf="@id/text_regioInstellen_huidigeRegio"
+            android:layout_marginTop="32dp"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:entries="@array/regios"
+            android:ems="10"
+            android:id="@+id/spinner_regioInstellen_gewicht"
+            app:layout_constraintTop_toBottomOf="@id/text_nieuweRegio" />
+
+        <Button
+            android:text="Regio aanpassen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_regioInstellen"
+            android:onClick="RegioAanpassen"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_regioInstellen_gewicht"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#01DFA5"
+            android:textColor="#FFFFFF"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Annuleer"
+            android:textAlignment="center"
+            android:textColor="#0174DF"
+            android:id="@+id/text_annuleer_gewichtInstellen"
+            app:layout_constraintTop_toBottomOf="@+id/btn_regioInstellen"
+            android:textSize="10dp"
+            android:onClick="annuleerRegioInstellen"
+            android:layout_marginTop="16dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>
