@@ -30,15 +30,47 @@
             android:textSize="25dp"
             app:layout_constraintTop_toBottomOf="@id/btn_annuleerActiviteit" />
 
+        <RadioGroup
+            android:layout_width="384dp"
+            android:layout_height="42dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/text_nieuweActiveit"
+            android:layout_marginTop="10dp"
+            android:id="@+id/rdbGroup">
+
+            <RadioButton
+                android:id="@+id/rdb_wandelen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wandelen"
+                app:layout_constraintTop_toBottomOf="@id/text_nieuweActiveit" />
+
+            <RadioButton
+                android:id="@+id/rdb_lopen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lopen"
+                app:layout_constraintStart_toEndOf="@id/rdb_wandelen"
+                app:layout_constraintTop_toBottomOf="@id/text_nieuweActiveit" />
+
+            <RadioButton
+                android:id="@+id/rdb_fietsen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fietsen"
+                app:layout_constraintStart_toEndOf="@id/rdb_lopen"
+                app:layout_constraintTop_toBottomOf="@id/text_nieuweActiveit" />
+        </RadioGroup>
+
         <TextView
             android:id="@+id/text_titelActiviteit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="20dp"
             android:text="Titel"
             android:textColor="#6E6E6E"
             android:textSize="16dp"
-            app:layout_constraintTop_toBottomOf="@id/text_nieuweActiveit" />
+            app:layout_constraintTop_toBottomOf="@id/rdbGroup" />
 
         <EditText
             android:id="@+id/edit_titelActiviteit"
@@ -83,6 +115,8 @@
             app:layout_constraintLeft_toRightOf="@id/btn_tekenRoute"
             app:layout_constraintTop_toBottomOf="@id/edit_beschrijvingActiviteit"
             android:onClick="activiteitLocatie"/>
+
+
 
     </android.support.constraint.ConstraintLayout>
 

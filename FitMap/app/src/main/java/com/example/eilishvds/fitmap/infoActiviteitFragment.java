@@ -89,13 +89,15 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     private double endLong;
     private double distance = 1;
     private double cal;
+    private double MET_value;
+    private double TotaalCal;
 
     private Polyline line;
     private float zoomlevel = 10f;
 
     private Date beginTijd;
     private Date eindeTijd;
-    public long tussenTijd;
+    public double tussenTijd;
 
     public infoActiviteitFragment() {
         // Required empty public constructor
@@ -133,7 +135,49 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
 
         user = mAuth.getCurrentUser();
 
-        cal = BerekenCal();
+        //cal = BerekenCal();
+    }
+
+    private void HaalMetWaardeOp() {
+        DocumentReference docRef = db.collection("RouteBeschrijving").document("Route" + routeteller_route);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task2) {
+                if (task2.isSuccessful()) {
+                    DocumentSnapshot document = task2.getResult();
+                    assert document != null;
+                    if (document.exists()) {
+                        String middel = document.getString("middel");
+                        assert middel != null;
+
+                        if (!middel.isEmpty()){
+                            switch (middel){
+                                case "Wandelen":
+                                    MET_value = 2.9;
+                                    break;
+                                case "Lopen":
+                                    MET_value = 8;
+                                    break;
+                                case "Fietsen":
+                                    MET_value = 5.5;
+                                    break;
+                                default:
+                                    MET_value = 7;
+                                    break;
+                            }
+                        } else{
+                            MET_value = 7;
+                        }
+                    } else {
+                        MET_value = 7;
+                    }
+                } else {
+                    MET_value = 7;
+                }
+
+                HaalDocumentOp();
+            }
+        });
     }
 
     @Override
@@ -235,7 +279,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                     toast.show();
 
                     Log.d(TAG, list.toString());
-                    HaalDocumentOp();
+                    HaalMetWaardeOp();
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
@@ -246,6 +290,8 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     private void HaalDocumentOp() {
         Toast toast = Toast.makeText(getContext(), "De route_teller:  " + routeteller_route, Toast.LENGTH_LONG);
         toast.show();
+
+        TotaalCal = cal * MET_value;
 
         DocumentReference docRef = db.collection("RoutePoints").document("Route" + routeteller_route);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -271,7 +317,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                         toast.show();
 
                         distance = tekenMarker(document, list);
-                        schrijfGegevensweg(distance, cal);
+                        schrijfGegevensweg(distance, TotaalCal);
                     } else {
                         Log.d(TAG, "No such document");
                         Context context = getContext();
@@ -283,7 +329,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                         LatLng plaats = new LatLng(50, 4);
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
 
-                        schrijfGegevensweg(tussenTijd, cal);
+                        schrijfGegevensweg(tussenTijd, TotaalCal);
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
@@ -314,7 +360,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                         assert gewicht != null;
                         Double doubleGewicht = Double.parseDouble(gewicht);
 
-                        cal = doubleGewicht * 8;
+                        cal = doubleGewicht;
                     } else {
                         cal = 0;
                     }
@@ -331,7 +377,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
         try {
             map.put("UID", user.getUid());
             map.put("Km", distance);
-            map.put("tijd (in minuten)", tussenTijd);
+            map.put("tijd (in seconden)", tussenTijd);
             map.put("Km per H", 0);
             map.put("Cal per H", cal);
         } catch (Exception e) {
@@ -456,5 +502,9 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
 
     public void nieuweActiviteit(View v){
         Navigation.findNavController(v).navigate(R.id.action_infoActiviteit_to_aanmakenActiviteit);
+    }
+
+    public void BerekenTussentijd (long elapsedTime){
+        tussenTijd = elapsedTime * 0.001;
     }
 }

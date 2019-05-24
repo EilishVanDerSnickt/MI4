@@ -172,7 +172,7 @@ public class homeFragment extends Fragment {
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             int i = 1;
             for (String s : list) {
-                if (i % 2 == 0) {
+                if (i % 4 == 0) {
                     String value = document.getString("titel");
                     cardView = new CardView(getContext());
                     this.linearLayout.addView(cardView);

@@ -119,7 +119,7 @@ public class viewPager_tab2 extends Fragment {
                        textView2.setText("KM / H: " + value);
                        break;
                    case 3:
-                       value = document.getDouble("tijd (in minuten)");
+                       value = document.getDouble("tijd (in seconden)");
                        textView3.setText("Tijd (in minuten): " + value);
                        break;
                    case 4:

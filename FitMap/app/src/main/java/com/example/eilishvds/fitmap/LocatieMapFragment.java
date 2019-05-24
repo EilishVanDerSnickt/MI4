@@ -87,6 +87,7 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
     private final float zoomlevel = 10f;
     private ArrayList locationPoints = new ArrayList();
     private Polyline locationLine;
+    private int minTime;
 
     private FirebaseFirestore db;
     private Map<String, Object> map;
@@ -98,6 +99,7 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
 
     private String regio;
     private LatLng plaats;
+    private String middel;
 
     public LocatieMapFragment() {
         // Required empty public constructor
@@ -279,10 +281,9 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
         CheckRegioBestaat();
 
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 0, new LocationListener() {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, 0, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                //locationPoints.clear();
                 try{
                     LatLng latlngLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(latlngLocation).title("LocatieMarker"));
@@ -301,15 +302,15 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
                         locationLine.setPoints(points);
                     }
 
-
                     GeoPoint geoPoint = new GeoPoint(latlngLocation.latitude, latlngLocation.longitude);
-                    /**
-                    Context context = getContext();
-                    int duration = Toast.LENGTH_SHORT;
 
-                    Toast toast = Toast.makeText(context, geoPoint.toString(), duration);
-                    toast.show();
-                    */
+                    /**
+                     Context context = getContext();
+                     int duration = Toast.LENGTH_SHORT;
+
+                     Toast toast = Toast.makeText(context, geoPoint.toString(), duration);
+                     toast.show();
+                     */
                     mMap.clear();
 
                     map.put("Point" + markerteller, geoPoint);
@@ -453,8 +454,59 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
+
+                CheckMiddel();
             }
         });
+    }
+
+    private void CheckMiddel() {
+        DocumentReference docRef = db.collection("RouteBeschrijving").document("Route" + routeteller_route);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+                if (task1.isSuccessful()) {
+                    DocumentSnapshot document1 = task1.getResult();
+                    assert document1 != null;
+                    if (document1.exists()) {
+                        middel = document1.getString("middel");
+                        Log.d(TAG, "DocumentSnapshot data: " + document1.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+
+                        middel = "";
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task1.getException());
+
+                   middel = "";
+                }
+
+                BepaalInterval(middel);
+            }
+        });
+    }
+
+    private void BepaalInterval(String vervoersmiddel) {
+        if (!vervoersmiddel.isEmpty()){
+            switch (vervoersmiddel){
+                case "Wandelen":
+                    minTime = 1000;
+                    break;
+                case "Lopen":
+                    minTime = 100;
+                    break;
+                case "Fietsen":
+                    minTime = 10;
+                    break;
+                default:
+                    minTime = 500;
+                    break;
+            }
+        } else{
+            minTime = 500;
+        }
     }
 
 

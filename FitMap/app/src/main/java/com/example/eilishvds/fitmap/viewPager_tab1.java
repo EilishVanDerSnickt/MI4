@@ -33,6 +33,7 @@ public class viewPager_tab1 extends Fragment {
     private View rootview;
     private TextView textView1;
     private TextView textView2;
+    private TextView textView3;
     
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
@@ -80,7 +81,7 @@ public class viewPager_tab1 extends Fragment {
                                     }
                                 }
                                 
-                                toonInTextView(document, list, textView1, textView2);
+                                toonInTextView(document, list, textView1, textView2, textView3);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -95,11 +96,13 @@ public class viewPager_tab1 extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void toonInTextView(QueryDocumentSnapshot document, List<String> list, TextView textView1, TextView textView2) {
+    private void toonInTextView(QueryDocumentSnapshot document, List<String> list, TextView textView1, TextView textView2, TextView textView3) {
         try {
             textView1 = rootview.findViewById(R.id.tab_1_titel);
             textView2 = rootview.findViewById(R.id.tab_1_beschrijving);
+            textView3 = rootview.findViewById(R.id.tab_1_middel);
             int i = 1;
+
             for (String s : list) {
                 if (i == 1) {
                     String value = document.getString("titel");
@@ -108,6 +111,9 @@ public class viewPager_tab1 extends Fragment {
                 } else if (i == 2) {
                     String value = document.getString("beschrijving");
                     textView2.setText("Beschrijving: " + value);
+                } else if (i == 3){
+                    String value = document.getString("middel");
+                    textView3.setText("Middel: " + value);
                 }
                 i = i + 1;
             }

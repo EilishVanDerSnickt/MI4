@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Chronometer;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -73,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     private ScrollView scrollView;
     private CardView cardView;
     private Spinner spinner;
+    private RadioButton radioButton1;
+    private RadioButton radioButton2;
+    private RadioButton radioButton3;
+    private RadioGroup radioGroup;
 
     private homeFragment home = new homeFragment();
     private LoginFragment login = new LoginFragment();
@@ -538,16 +544,33 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     public void activiteitLocatie(View v){
         edittext1 = (EditText) findViewById(R.id.edit_titelActiviteit);
         edittext2 = (EditText) findViewById(R.id.edit_beschrijvingActiviteit);
+        radioButton1 = (RadioButton) findViewById(R.id.rdb_wandelen);
+        radioButton2 = (RadioButton) findViewById(R.id.rdb_lopen);
+        radioButton3 = (RadioButton) findViewById(R.id.rdb_fietsen);
 
         String titel = edittext1.getText().toString();
         String beschrijving = edittext2.getText().toString();
+        String middel;
 
-        if (!ValideerAanmakenActiviteit(titel, beschrijving)) {
+        if (radioButton1.isChecked()){
+            middel = "Wandelen";
+        }
+        else if (radioButton2.isChecked()){
+            middel = "Lopen";
+        }
+        else if (radioButton3.isChecked()) {
+            middel = "Fietsen";
+        } else {
+            middel = "";
+        }
+
+        if (!ValideerAanmakenActiviteit(titel, beschrijving, middel)) {
             return;
         }
 
         try{
             map.put("UID", user.getUid());
+            map.put("middel", middel);
             map.put("titel", titel);
             map.put("beschrijving", beschrijving);
         } catch (Exception e){
@@ -590,7 +613,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         toast.show();
     }
 
-    private boolean ValideerAanmakenActiviteit(String titel, String beschrijving) {
+    private boolean ValideerAanmakenActiviteit(String titel, String beschrijving, String middel) {
         boolean valid = true;
 
         if (titel.isEmpty()) {
@@ -601,6 +624,11 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         if (beschrijving.isEmpty()) {
             edittext2 = (EditText) findViewById(R.id.edit_beschrijvingActiviteit);
             edittext2.setError("This field is required");
+            valid = false;
+        }
+        if (middel.isEmpty()){
+            radioButton3 = (RadioButton) findViewById(R.id.rdb_fietsen);
+            radioButton3.setError("this field is required");
             valid = false;
         }
 
@@ -614,16 +642,34 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     public void activiteitTeken(View v){
         edittext1 = (EditText) findViewById(R.id.edit_titelActiviteit);
         edittext2 = (EditText) findViewById(R.id.edit_beschrijvingActiviteit);
+        radioButton1 = (RadioButton) findViewById(R.id.rdb_wandelen);
+        radioButton2 = (RadioButton) findViewById(R.id.rdb_lopen);
+        radioButton3 = (RadioButton) findViewById(R.id.rdb_fietsen);
 
         String titel = edittext1.getText().toString();
         String beschrijving = edittext2.getText().toString();
+        String middel;
 
-        if (!ValideerAanmakenActiviteit(titel, beschrijving)) {
+        if (radioButton1.isChecked()){
+            middel = "Wandelen";
+        }
+        else if (radioButton2.isChecked()){
+            middel = "Lopen";
+        }
+        else if (radioButton3.isChecked()) {
+            middel = "Fietsen";
+        } else {
+            middel = "";
+        }
+
+
+        if (!ValideerAanmakenActiviteit(titel, beschrijving, middel)) {
             return;
         }
 
         try{
             map.put("UID", user.getUid());
+            map.put("middel", middel);
             map.put("titel", titel);
             map.put("beschrijving", beschrijving);
         } catch (Exception e){
@@ -689,10 +735,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         Toast toast = Toast.makeText(getApplicationContext(), "elapsed tijd: " + elapsedTijd, Toast.LENGTH_SHORT);
         toast.show();
 
-        infoActiviteit.tussenTijd = elapsedTijd;
-
-        toast = Toast.makeText(getApplicationContext(), "tussen tijd: " + infoActiviteit.tussenTijd, Toast.LENGTH_SHORT);
-        toast.show();
+        //infoActiviteit.BerekenTussentijd(elapsedTijd);
     }
 
     public void bekijkProfiel(View v){
