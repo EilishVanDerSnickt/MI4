@@ -95,9 +95,8 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     private Polyline line;
     private float zoomlevel = 10f;
 
-    private Date beginTijd;
-    private Date eindeTijd;
     public double tussenTijd;
+    public double var = 0;
 
     public infoActiviteitFragment() {
         // Required empty public constructor
@@ -135,7 +134,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
 
         user = mAuth.getCurrentUser();
 
-        //cal = BerekenCal();
+        cal = BerekenCal();
     }
 
     private void HaalMetWaardeOp() {
@@ -323,13 +322,13 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                         Context context = getContext();
                         int duration = Toast.LENGTH_SHORT;
 
-                        Toast toast = Toast.makeText(context, "No such document" + tussenTijd, duration);
+                        Toast toast = Toast.makeText(context, "No such document" + var, duration);
                         toast.show();
 
                         LatLng plaats = new LatLng(50, 4);
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
 
-                        schrijfGegevensweg(tussenTijd, TotaalCal);
+                        schrijfGegevensweg(var, TotaalCal);
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
