@@ -735,7 +735,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         Toast toast = Toast.makeText(getApplicationContext(), "elapsed tijd: " + elapsedTijd, Toast.LENGTH_SHORT);
         toast.show();
 
-        //infoActiviteit.BerekenTussentijd(elapsedTijd);
+        infoActiviteit.BerekenTussentijd(elapsedTijd);
     }
 
     public void bekijkProfiel(View v){
@@ -748,10 +748,12 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         checkbox = (CheckBox) findViewById(R.id.check_opslaan);
 
         if (checkbox.isChecked()) {
-            infoActiviteit.tussenTijd = elapsedTijd;
+            //infoActiviteit.tussenTijd = elapsedTijd;
 
+            /*
             Toast toast = Toast.makeText(getApplicationContext(), "tussen tijd: " + infoActiviteit.tussenTijd, Toast.LENGTH_SHORT);
             toast.show();
+            */
         } else {
 
             berekenRouteTeller();
@@ -759,7 +761,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
     }
 
     private void berekenRouteTeller() {
-        //deze code wordt overgeslagen -> ik weet niet waarom
         db.collection("RouteBeschrijving").whereEqualTo("UID", user.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

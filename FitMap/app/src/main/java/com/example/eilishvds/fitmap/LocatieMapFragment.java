@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -83,6 +84,7 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
     private GoogleMap mMap;
     private MapView map_view;
     private View rootview;
+    private WindowManager.LayoutParams lp;
     private static final int MY_REQUEST_INT = 117;
     private final float zoomlevel = 10f;
     private ArrayList locationPoints = new ArrayList();
@@ -152,6 +154,7 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootview = inflater.inflate(R.layout.fragment_locatie_map, container, false);
+        lp = getActivity().getWindow().getAttributes();
         return rootview;
     }
 
@@ -285,6 +288,9 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
             @Override
             public void onLocationChanged(Location location) {
                 try{
+                    lp.dimAmount=1.0f;
+                    getActivity().getWindow().setAttributes(lp);
+
                     LatLng latlngLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(latlngLocation).title("LocatieMarker"));
                     locationPoints.add(latlngLocation);
@@ -345,7 +351,6 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
                     Toast toast = Toast.makeText(getContext(), "OnLocationChanged fout: " + e, duration);
                     toast.show();
                 }
-
             }
 
             @Override

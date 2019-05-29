@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -95,8 +96,10 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     private Polyline line;
     private float zoomlevel = 10f;
 
-    public double tussenTijd;
-    public double var = 0;
+    private long startTijd;
+    private long stopTijd;
+    private long tussenTijd;
+    private double var = 0;
 
     public infoActiviteitFragment() {
         // Required empty public constructor
@@ -327,7 +330,6 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
 
                         LatLng plaats = new LatLng(50, 4);
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(plaats));
-
                         schrijfGegevensweg(var, TotaalCal);
                     }
                 } else {
@@ -504,6 +506,6 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
     }
 
     public void BerekenTussentijd (long elapsedTime){
-        tussenTijd = elapsedTime * 0.001;
+        tussenTijd = elapsedTime;
     }
 }
