@@ -165,6 +165,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         map = new HashMap<>();
         map2 = new HashMap<>();
         map3 = new HashMap<>();
+
+        BepaalAantalRoutes();
     }
 
     @Override
@@ -611,6 +613,37 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
         Toast toast = Toast.makeText(getApplicationContext(), "Start tijd: " + startTijd, Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    private void BepaalAantalRoutes() {
+        db.collection("RouteBeschrijving").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<String> list = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list.add(document.getId());
+                    }
+
+                    routeteller_beschrijving = list.size();
+                    routeteller_route = routeteller_beschrijving;
+                    routeteller_gegevens = routeteller_beschrijving;
+                    Toast toast = Toast.makeText(getApplicationContext(), "Route: " + routeteller_beschrijving, Toast.LENGTH_LONG);
+                    toast.show();
+
+                    Log.d(TAG, list.toString());
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+
+                    Toast toast = Toast.makeText(getApplicationContext(), "Route teller wordt niet berekend: ", Toast.LENGTH_LONG);
+                    toast.show();
+
+                    routeteller_beschrijving = 0;
+                    routeteller_route = routeteller_beschrijving;
+                    routeteller_gegevens = routeteller_beschrijving;
+                }
+            }
+        });
     }
 
     private boolean ValideerAanmakenActiviteit(String titel, String beschrijving, String middel) {

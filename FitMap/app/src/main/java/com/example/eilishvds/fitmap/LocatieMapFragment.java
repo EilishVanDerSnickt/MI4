@@ -497,7 +497,7 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
         if (!vervoersmiddel.isEmpty()){
             switch (vervoersmiddel){
                 case "Wandelen":
-                    minTime = 1000;
+                    minTime = 200;
                     break;
                 case "Lopen":
                     minTime = 100;
