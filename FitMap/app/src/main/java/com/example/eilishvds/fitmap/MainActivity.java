@@ -592,7 +592,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
-                        toast.show();
+                        //toast.show();
 
                         Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_aanmakenActiviteit_to_locatieMap);
                     }
@@ -629,7 +629,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                     routeteller_route = routeteller_beschrijving;
                     routeteller_gegevens = routeteller_beschrijving;
                     Toast toast = Toast.makeText(getApplicationContext(), "Route: " + routeteller_beschrijving, Toast.LENGTH_LONG);
-                    toast.show();
+                    //toast.show();
 
                     Log.d(TAG, list.toString());
                 } else {
@@ -721,7 +721,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
-                        toast.show();
+                        //toast.show();
 
                         Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_aanmakenActiviteit_to_tekenMap);
                     }
@@ -766,7 +766,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
         elapsedTijd = stopTijd.getTime() - startTijd.getTime();
 
         Toast toast = Toast.makeText(getApplicationContext(), "elapsed tijd: " + elapsedTijd, Toast.LENGTH_SHORT);
-        toast.show();
+        //toast.show();
 
         infoActiviteit.BerekenTussentijd(elapsedTijd);
     }
@@ -805,7 +805,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
                     routeteller_route = list.size();
                     Toast toast = Toast.makeText(getApplicationContext(), "Route: " + routeteller_route, Toast.LENGTH_LONG);
-                    toast.show();
+                    //toast.show();
 
                     Log.d(TAG, list.toString());
 
@@ -827,7 +827,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
 
     private void VerwijderRoute() {
         Toast toast = Toast.makeText(getApplicationContext(), "De huidige route is: "+ routeteller_route, Toast.LENGTH_SHORT);
-        toast.show();
+        //toast.show();
 
 
         db.collection("RouteBeschrijving").document("Route" + routeteller_route)
@@ -838,7 +838,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
 
                         Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
-                        toast.show();
+                        //toast.show();
 
                     }
                 })
@@ -857,7 +857,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
 
                         Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
-                        toast.show();
+                        //toast.show();
 
                     }
                 })
@@ -876,7 +876,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
 
                         Toast toast = Toast.makeText(getApplicationContext(), "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT);
-                        toast.show();
+                        //toast.show();
 
                     }
                 })
@@ -920,7 +920,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, "het document bestaat", duration);
-                        toast.show();
+                        //toast.show();
                         Log.d(TAG, "DocumentSnapshot data: " + document2.getData());
                         UpdateDocument(huidgGewicht);
                     } else {
@@ -928,7 +928,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, "het lukt", duration);
-                        toast.show();
+                        //toast.show();
                         Log.d(TAG, "No such document");
                         MaakNieuwDocumentAan(huidgGewicht);
                     }
@@ -963,7 +963,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
-                        toast.show();
+                        //toast.show();
 
                         Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_gewicht_to_instellingen);
                     }
@@ -1027,7 +1027,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, "het document bestaat", duration);
-                        toast.show();
+                        //toast.show();
                         Log.d(TAG, "DocumentSnapshot data: " + document3.getData());
                         UpdateDocumentRegio(huidigeRegio);
                     } else {
@@ -1035,7 +1035,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, "het lukt", duration);
-                        toast.show();
+                        //toast.show();
                         Log.d(TAG, "No such document");
                         MaakNieuwDocumentAanRegio(huidigeRegio);
                     }
@@ -1070,7 +1070,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnF
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
-                        toast.show();
+                        //toast.show();
 
                         Navigation.findNavController(findViewById(R.id.fragment)).navigate(R.id.action_regio_to_instellingen);
                     }

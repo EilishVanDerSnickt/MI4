@@ -331,7 +331,7 @@ public class LocatieMapFragment extends Fragment implements OnMapReadyCallback, 
                                     int duration = Toast.LENGTH_SHORT;
 
                                     Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
-                                    toast.show();
+                                    //toast.show();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {

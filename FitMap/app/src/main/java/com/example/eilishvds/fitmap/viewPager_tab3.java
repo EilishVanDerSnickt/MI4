@@ -157,7 +157,7 @@ public class viewPager_tab3 extends Fragment implements OnMapReadyCallback {
 
     private void ToonJuisteRoute(int size) {
         Toast toast = Toast.makeText(getContext(), "Grootte van de array: " + size, Toast.LENGTH_SHORT);
-        toast.show();
+        //toast.show();
         DocumentReference docRef = db.collection("RoutePoints").document("Route" + size);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

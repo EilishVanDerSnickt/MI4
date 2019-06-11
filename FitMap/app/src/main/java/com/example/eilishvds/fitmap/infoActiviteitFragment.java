@@ -278,7 +278,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
 
                     routeteller_route = list.size();
                     Toast toast = Toast.makeText(getContext(), "Route: " + routeteller_route, Toast.LENGTH_LONG);
-                    toast.show();
+                    //toast.show();
 
                     Log.d(TAG, list.toString());
                     HaalMetWaardeOp();
@@ -291,7 +291,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
 
     private void HaalDocumentOp() {
         Toast toast = Toast.makeText(getContext(), "De route_teller:  " + routeteller_route, Toast.LENGTH_LONG);
-        toast.show();
+        //toast.show();
 
         TotaalCal = cal * MET_value;
 
@@ -316,7 +316,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, "DocumentSnapshot data: " + document.getData(), duration);
-                        toast.show();
+                        //toast.show();
 
                         distance = tekenMarker(document, list);
                         schrijfGegevensweg(distance, TotaalCal);
@@ -398,7 +398,7 @@ public class infoActiviteitFragment extends Fragment implements OnMapReadyCallba
                         int duration = Toast.LENGTH_SHORT;
 
                         Toast toast = Toast.makeText(context, "DocumentSnapshot successfully written!", duration);
-                        toast.show();
+                        //toast.show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

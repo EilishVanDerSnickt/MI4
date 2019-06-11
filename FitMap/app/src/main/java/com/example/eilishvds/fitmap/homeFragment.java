@@ -150,7 +150,7 @@ public class homeFragment extends Fragment {
                                 int duration = Toast.LENGTH_SHORT;
 
                                 Toast toast = Toast.makeText(context, document.getId() + " => " + document.getData(), duration);
-                                toast.show();
+                                //toast.show();
 
                                 toonInTextView(document, list, textView);
                             }
@@ -179,6 +179,8 @@ public class homeFragment extends Fragment {
                     textView = new TextView(getContext());
                     textView.setLayoutParams(lparams);
                     textView.setText(value);
+                    textView.setTextSize(16);
+                    textView.setPadding(20,20,20,20);
                     textView.setLinksClickable(true);
                     cardView.addView(textView);
                 }
@@ -190,7 +192,7 @@ public class homeFragment extends Fragment {
             int duration = Toast.LENGTH_SHORT;
 
             Toast toast = Toast.makeText(context, "Exception: " + e, duration);
-            toast.show();
+            //toast.show();
         }
     }
 

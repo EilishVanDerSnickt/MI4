@@ -107,7 +107,7 @@ public class viewPager_tab2 extends Fragment {
             int duration = Toast.LENGTH_SHORT;
 
             Toast toast = Toast.makeText(context, "Aantal in lijst: " + list.size(), duration);
-            toast.show();
+            //toast.show();
             for (String s : list) {
                switch (i){
                    case 1:
