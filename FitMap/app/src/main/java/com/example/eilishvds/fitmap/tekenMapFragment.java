@@ -381,7 +381,7 @@ public class tekenMapFragment extends Fragment implements OnMapReadyCallback, Go
 
     private void BepaalRouteNaam() {
 
-        db.collection("RouteBeschrijving").whereEqualTo("UID", user.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("RouteBeschrijving").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
